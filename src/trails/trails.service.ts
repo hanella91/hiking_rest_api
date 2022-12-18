@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CreateTrailDto } from './dto/create-trail.dto';
 import { UpdateTrailDto } from './dto/update-trail.dto';
 import { Trail } from './entity/trail.entity';
@@ -14,39 +14,48 @@ export class TrailsService {
         private trailsRepository: Repository<Trail>,
     ) { }
 
-    async create(trail: CreateTrailDto): Promise<void> {
-        await this.trailsRepository.save({
+    async create(userId: string, trail: CreateTrailDto): Promise<Trail> {
+        return await this.trailsRepository.save({
             ...trail,
-            userId: uuid.v4(),
-            createdAt: new Date()
+            userId,
         });
     }
 
-    findAll(): Promise<Trail[]> {
-        return this.trailsRepository.find();
+    async findAll(): Promise<Trail[]> {
+        return await this.trailsRepository.find();
     }
 
-    findOne(id: string): Promise<Trail> {
-        return this.trailsRepository.findOneBy({ id });
+    async findOneById(trailId: string): Promise<Trail | undefined> {
+        return await this.trailsRepository.findOneBy({ id: trailId });
     }
 
-    async update(id: string, trail: UpdateTrailDto): Promise<void> {
-        await
-            this.trailsRepository
-                .createQueryBuilder()
-                .update(UpdateTrailDto)
-                .set({
-                    trailName: trail.trailName,
-                    duration: trail.duration,
-                    difficulty: trail.difficulty,
-                    startPoint: trail.startPoint,
-                    endPoint: trail.endPoint
-                })
-                .where("id = :id", { id })
-                .execute();
+    async update(userId: string, id: string, updateTrail: UpdateTrailDto): Promise<Trail> {
+        const existingTrail = await this.trailsRepository.findOneBy({ id });
+
+        if (null === existingTrail) {
+            throw new HttpException(`trail not found for id : ${id}`, HttpStatus.NOT_FOUND);
+        }
+
+        if (existingTrail.userId !== userId) {
+            throw new HttpException(`You don't have permission to access this resource.`, HttpStatus.FORBIDDEN);
+        }
+
+        return await this.trailsRepository.save({
+            ...existingTrail,
+            ...updateTrail,
+            id,
+        });
     }
 
-    async remove(id: number): Promise<void> {
-        await this.trailsRepository.delete(id);
+    async remove(userId: string, id: string): Promise<DeleteResult> {
+        const existingTrail: Trail = await this.trailsRepository.findOneBy({ id });
+        if (null === existingTrail) {
+            throw new HttpException(`trail not found for id : ${id}`, HttpStatus.NOT_FOUND);
+        }
+
+        if (existingTrail.userId !== userId) {
+            throw new HttpException(`You don't have permission to access this resource.`, HttpStatus.FORBIDDEN);
+        }
+        return await this.trailsRepository.delete(id);
     }
 }

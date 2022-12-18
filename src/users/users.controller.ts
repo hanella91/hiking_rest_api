@@ -1,15 +1,24 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { Public } from '../auth/decorators/public.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dto/user.dto';
 import { User } from './entity/users.entity';
-import { UserNameAlreadyExistError, UsersService } from './users.service';
+import { UserInfoWithoutPassword, UserInfoWithoutEmail, UserNameAlreadyExistError, UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) { }
-
+  /**
+   * Return new created user.
+   *
+   * @param user New user info for creating
+   * @returns UserInfo
+   */
   @Post()
-  async create(@Body() user: User) {
+  async create(@Body() user: CreateUserDto): Promise<User> {
     try {
-      return await this.userService.create(user)
+      return await this.userService.create(user);
     } catch (error) {
       if (error instanceof UserNameAlreadyExistError) {
         throw new HttpException(`user with username '${user.username}' already exists.`, HttpStatus.BAD_REQUEST);
@@ -17,23 +26,43 @@ export class UsersController {
     }
   }
 
+  /**
+   * Return an user for a given id.
+   *
+   * @param id The user id of the requested user.
+   * @param userId The user id from the jwt.
+   * @returns UserInfo | UserInfoWithoutEmail
+   */
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<User> {
-    const user = await this.userService.findOne(id);
+  async findOne(@Param('id') id: string, @Request() req: any): Promise<UserInfoWithoutPassword | UserInfoWithoutEmail> {
+    const user = await this.userService.findOneById(id);
     if (null === user) {
       throw new HttpException(`user not found for id: ${id}.`, HttpStatus.NOT_FOUND);
     }
+    const { email, password, ...userInfo } = user;
+    if (id === req.user.userId) {
+      return {
+        ...userInfo,
+        email
+      };
+    }
 
-    return user;
+    return userInfo;
   }
 
+  /**
+ * Update an user for a given id.
+ *
+ * @param id The user id of the requested user.
+ * @param userId The user id from the jwt.
+ * @returns UserInfo | UserInfoWithoutEmail
+ * ERROR : If someone not own the user account try to update, 403Error
+ */
+
+  @Public()
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() user: User) {
-    const existingUser = this.findOne(id);
-    if (existingUser) {
-      this.userService.update(id, user);
-    } else if (null === user) {
-      throw new HttpException(`user not found for id: ${id}.`, HttpStatus.NOT_FOUND);
-    }
+  async update(@Param('id') id: string, @Request() req: any, @Body() updateUserDto: UpdateUserDto): Promise<User | undefined> {
+    return await this.userService.update(req.user.userId, id, updateUserDto);
   }
 }

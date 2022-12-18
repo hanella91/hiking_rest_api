@@ -1,4 +1,4 @@
-import { OmitType } from '@nestjs/mapped-types';
-import { Trail } from '../entity/trail.entity';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateTrailDto } from './create-trail.dto';
 
-export class UpdateTrailDto extends OmitType(Trail, ['id', 'userId', 'createdAt', 'updatedAt']) { }
+export class UpdateTrailDto extends PartialType(CreateTrailDto) { }

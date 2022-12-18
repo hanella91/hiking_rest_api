@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventsModule } from 'src/events/events.module';
-import { EventsService } from 'src/events/events.service';
+import { EventsModule } from '../events/events.module';
+import { EventsService } from '../events/events.service';
 import { Reservation } from './entity/reservation.entity';
 import { ReservationsController } from './reservations.controller';
 import { ReservationsService } from './reservations.service';

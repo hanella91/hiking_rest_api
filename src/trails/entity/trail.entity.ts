@@ -1,14 +1,14 @@
 import { IsIn, IsInt, IsString } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-enum difficultyTypeEnum {
+export enum DifficultyTypeEnum {
     easiest = 'easiest',    //하
     moderate = 'moderate',  //중
     strenous = 'strenous',  //상
 }
 
-type difficultyType = keyof typeof difficultyTypeEnum;
-const difficultyTypes = Object.keys(difficultyTypeEnum);
+type DifficultyType = keyof typeof DifficultyTypeEnum;
+const difficultyTypes = Object.keys(DifficultyTypeEnum);
 
 @Entity()
 export class Trail {
@@ -29,7 +29,7 @@ export class Trail {
     @Column()
     @IsString()
     @IsIn(difficultyTypes)
-    difficulty: difficultyType;
+    difficulty: DifficultyType;
 
     @Column({ name: 'start_point' })
     @IsString()
@@ -39,11 +39,10 @@ export class Trail {
     @IsString()
     endPoint: string;
 
-    @Column({ name: 'created_at' })
+    @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
 
-    @Column({ nullable: true, name: 'updated_at' })
+    @UpdateDateColumn({ nullable: true, name: 'updated_at' })
     updatedAt: Date;
-
 }
 

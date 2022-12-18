@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsUUID } from 'class-validator';
-import { Repository } from 'typeorm';
+import { Column, Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { Event } from './entity/event.entity';
 import * as uuid from 'uuid';
@@ -17,7 +17,7 @@ export class EventsService {
     await this.eventRepository.save({
       ...event,
       trailId: '1',
-      userId: uuid.v4(),
+      userId: event.userId,
       createdAt: new Date(),
     });
   }

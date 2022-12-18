@@ -24,5 +24,4 @@ import { AuthModule } from './auth/auth.module';
     }), TrailModule, UsersModule, EventsModule, ReservationsModule, AuthModule
   ],
 })
-
 export class AppModule { }

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { ReservationDto } from './dto/update-reservation.dto';
 import { Reservation } from './entity/reservation.entity';
 import * as uuid from 'uuid';
-import { EventsService } from 'src/events/events.service';
+import { EventsService } from '../events/events.service';
 import { throws } from 'assert';
 
 
@@ -17,10 +17,9 @@ export class ReservationsService {
 
   ) { }
 
-  async create(eventId: string): Promise<Reservation | null> {
+  async create(requestUser: string, eventId: string): Promise<Reservation | null> {
     const condition = { eventId: eventId }
     const event = await this.eventsService.findOne(eventId);
-
     const memberCount = (await this.reservationRepository.findBy(condition)).length
     if (memberCount >= event.maxPersons) {
       throw new HttpException(`This Event has been full(${memberCount}/${event.maxPersons})`, HttpStatus.FORBIDDEN);

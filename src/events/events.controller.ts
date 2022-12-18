@@ -1,14 +1,18 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Redirect, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateEventDto } from './dto/create-event.dto';
 import { Event } from './entity/event.entity';
 import { EventsService } from './events.service';
+
 
 @Controller('events')
 export class EventsController {
   constructor(private eventService: EventsService) { }
 
   @Post()
-  async create(@Body() event: CreateEventDto) {
+  @UseGuards(JwtAuthGuard)
+  async create(@Request() req: any, @Body() event: CreateEventDto) {
+    event.userId = req.user.userId;
     return await this.eventService.create(event);
   }
 
@@ -25,26 +29,33 @@ export class EventsController {
     }
     return event;
   }
-
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() event: CreateEventDto) {
-    const existingEvent = await this.findOne(id);
-    if (null === existingEvent) {
+  @UseGuards(JwtAuthGuard)
+  async update(@Request() req: any, @Param('id') id: string, @Body() event: CreateEventDto) {
+    const existingEvent = await this.eventService.findOne(id);
+    if (existingEvent) {
+      if (existingEvent.userId === req.user.userId) {
+        return await this.eventService.update(id, event);
+      } else {
+        throw new HttpException(`You don't have permission to access this resource.`, HttpStatus.FORBIDDEN);
+      }
+    } else if (null === existingEvent) {
       throw new HttpException(`event not found for id : ${id}`, HttpStatus.BAD_REQUEST);
     }
-
-    return await this.eventService.update(id, event);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Request() req: any, @Param('id') id: string) {
     const existingEvent = await this.findOne(id);
-    if (null === existingEvent) {
+    if (existingEvent) {
+      if (existingEvent.userId === req.user.userId) {
+        return await this.eventService.remove(id);
+      } else {
+        throw new HttpException(`You don't have permission to access this resource.`, HttpStatus.FORBIDDEN);
+      }
+    } else if (null === existingEvent) {
       throw new HttpException(`event not found for id : ${id}`, HttpStatus.BAD_REQUEST);
     }
-
-    return await this.eventService.remove(id);
   }
-
-
 }
