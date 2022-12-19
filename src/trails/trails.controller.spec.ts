@@ -44,9 +44,9 @@ describe('Trails module', () => {
   });
 
   describe('POST /trails', () => {
-    it(`should create new trail then return new trail and created statatus code`,
+    it(`should create new trail then return new trail and created status code`,
       async () => {
-        const newTrail = {
+        const newTrail: CreateTrailDto = {
           trailName: "테스트",
           duration: 60,
           difficulty: "easiest",
@@ -140,11 +140,14 @@ describe('Trails module', () => {
         }
       ]
 
-      for (const payload in testData) {
+      for (let payload of testData) {
         await request(app.getHttpServer())
           .post('/trails')
           .send(payload)
           .expect(400)
+          .expect(({ body }) => {
+            console.log(body);
+          })
       }
     })
   });
@@ -221,7 +224,6 @@ describe('Trails module', () => {
         .get('/trails/hhhh')
         .expect(404)
     });
-
   });
 
   describe('PATCH /trails/:id', () => {
@@ -350,9 +352,5 @@ describe('Trails module', () => {
         .delete(`/trails/adsfasdf`)
         .expect(404)
     });
-
-
-  })
-
-
+  });
 });

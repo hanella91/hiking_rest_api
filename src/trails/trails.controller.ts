@@ -36,7 +36,7 @@ export class TrailsController {
         if (null === existedTrail) {
             throw new HttpException(`trail not found for id: ${trailId}.`, HttpStatus.NOT_FOUND);
         }
-
+        
         return existedTrail
     }
 

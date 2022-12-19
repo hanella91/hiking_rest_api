@@ -1,5 +1,5 @@
-import { IsDate, IsIn, IsInt } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { IsDate, IsIn, IsInt, isString, IsString } from 'class-validator';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 enum ReservationTypeEnum {
   manual = 'manual',
@@ -12,36 +12,42 @@ const ReservationTypes = Object.keys(ReservationTypeEnum);
 @Entity()
 export class Event {
   @PrimaryGeneratedColumn("uuid")
+  @IsString()
   id: string;
 
   @Column({ name: 'trail_id' })
+  @IsString()
   trailId: string;
 
   @Column({ name: 'user_id' })
+  @IsString()
   userId: string;
 
-  @Column({ name: 'max_persons' })
+  @Column({ name: 'max_persons', })
   @IsInt()
   maxPersons: number;
 
-  @Column()
-  @IsDate()
+  @Column({ type: Date })
+  @IsString()
   date: Date;
 
   @Column()
+  @IsString()
   description: string;
 
-  @Column({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at' })
+  @IsDate()
   createdAt: Date;
 
-  @Column({ nullable: true, name: 'updated_at' })
+  @UpdateDateColumn({ nullable: true, name: 'updated_at' })
+  @IsDate()
   updatedAt: Date;
 
   @Column({ name: 'reservation_type' })
   @IsIn(ReservationTypes)
   reservationType: ReservationType;
 
-  @Column({ name: 'reservation_untill' })
-  @IsDate()
+  @Column({ name: 'reservation_untill', type: Date })
+  @IsString()
   reservationUntill: Date;
 }

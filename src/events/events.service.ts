@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsUUID } from 'class-validator';
-import { Column, Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
+import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entity/event.entity';
-import * as uuid from 'uuid';
+
 
 @Injectable()
 export class EventsService {
@@ -13,12 +13,14 @@ export class EventsService {
     private eventRepository: Repository<Event>
   ) { }
 
-  async create(event: CreateEventDto): Promise<void> {
-    await this.eventRepository.save({
+  async create(userId: string, event: CreateEventDto): Promise<Event> {
+    if (event.maxPersons <= 1) {
+      throw new HttpException(`maxPersons should be more than 1`, HttpStatus.BAD_REQUEST);
+    }
+
+    return await this.eventRepository.save({
       ...event,
-      trailId: '1',
-      userId: event.userId,
-      createdAt: new Date(),
+      userId,
     });
   }
 
@@ -30,24 +32,35 @@ export class EventsService {
     return await this.eventRepository.findOneBy({ id });
   }
 
-  async update(id: string, event: CreateEventDto): Promise<void> {
-    await
-      this.eventRepository
-        .createQueryBuilder()
-        .update(Event)
-        .set({
-          maxPersons: event.maxPersons,
-          date: event.date,
-          description: event.description,
-          reservationType: event.reservationType,
-          updatedAt: new Date(),
-          reservationUntill: event.reservationUntill,
-        })
-        .where("id = :id", { id })
-        .execute();
+  async update(userId: string, id: string, updateEvent: UpdateEventDto): Promise<Event> {
+    const existingEvent = await this.eventRepository.findOneBy({ id });
+    console.log('userID : ', userId);
+    console.log('existingEvent : ', existingEvent.userId);
+
+    if (null === existingEvent) {
+      throw new HttpException(`event not found for id : ${id}`, HttpStatus.BAD_REQUEST);
+    }
+
+    if (existingEvent.userId !== userId) {
+      throw new HttpException(`You don't have permission to access this resource.`, HttpStatus.FORBIDDEN);
+    }
+
+    return await this.eventRepository.save({
+      ...existingEvent,
+      ...updateEvent,
+      id
+    });
   }
 
-  async remove(id: string): Promise<void> {
-    await this.eventRepository.delete(id);
+  async remove(userId: string, id: string): Promise<DeleteResult> {
+    const existingEvent = await this.eventRepository.findOneBy({ id });
+    if (null === existingEvent) {
+      throw new HttpException(`event not found for id : ${id}`, HttpStatus.BAD_REQUEST);
+    }
+    if (existingEvent.userId !== userId) {
+      throw new HttpException(`You don't have permission to access this resource.`, HttpStatus.FORBIDDEN);
+    }
+
+    return await this.eventRepository.delete(id);
   }
 }

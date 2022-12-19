@@ -1,6 +1,9 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Redirect, Request, UseGuards } from '@nestjs/common';
+import { DeleteResult } from 'typeorm';
+import { Public } from '../auth/decorators/public.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateEventDto } from './dto/create-event.dto';
+import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entity/event.entity';
 import { EventsService } from './events.service';
 
@@ -10,17 +13,17 @@ export class EventsController {
   constructor(private eventService: EventsService) { }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  async create(@Request() req: any, @Body() event: CreateEventDto) {
-    event.userId = req.user.userId;
-    return await this.eventService.create(event);
+  async create(@Request() req: any, @Body() event: CreateEventDto): Promise<Event> {
+    return await this.eventService.create(req.user.userId, event);
   }
 
+  @Public()
   @Get()
   async findAll(): Promise<Event[]> {
     return await this.eventService.findAll();
   }
 
+  @Public()
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Event | null> {
     const event = await this.eventService.findOne(id);
@@ -29,33 +32,15 @@ export class EventsController {
     }
     return event;
   }
+
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  async update(@Request() req: any, @Param('id') id: string, @Body() event: CreateEventDto) {
-    const existingEvent = await this.eventService.findOne(id);
-    if (existingEvent) {
-      if (existingEvent.userId === req.user.userId) {
-        return await this.eventService.update(id, event);
-      } else {
-        throw new HttpException(`You don't have permission to access this resource.`, HttpStatus.FORBIDDEN);
-      }
-    } else if (null === existingEvent) {
-      throw new HttpException(`event not found for id : ${id}`, HttpStatus.BAD_REQUEST);
-    }
+  async update(@Request() req: any, @Param('id') id: string, @Body() event: UpdateEventDto): Promise<Event> {
+    return await this.eventService.update(req.user.userId, id, event);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Public()
   @Delete(':id')
-  async remove(@Request() req: any, @Param('id') id: string) {
-    const existingEvent = await this.findOne(id);
-    if (existingEvent) {
-      if (existingEvent.userId === req.user.userId) {
-        return await this.eventService.remove(id);
-      } else {
-        throw new HttpException(`You don't have permission to access this resource.`, HttpStatus.FORBIDDEN);
-      }
-    } else if (null === existingEvent) {
-      throw new HttpException(`event not found for id : ${id}`, HttpStatus.BAD_REQUEST);
-    }
+  async remove(@Request() req: any, @Param('id') id: string): Promise<DeleteResult> {
+    return await this.eventService.remove(req.user.userId, id);
   }
-}
+};

@@ -4,7 +4,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { CreateTrailDto } from './dto/create-trail.dto';
 import { UpdateTrailDto } from './dto/update-trail.dto';
 import { Trail } from './entity/trail.entity';
-import * as uuid from 'uuid';
+
 
 @Injectable()
 export class TrailsService {
