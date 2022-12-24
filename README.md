@@ -116,8 +116,10 @@ $ npm run test:e2e
 ```
 
 `POST` /users
-`Request`
+
 *Create new user*
+
+`Request`
 ```
 {
   "username" : "hanellej",
@@ -141,8 +143,10 @@ $ npm run test:e2e
 ```
 
 ### `GET` /users/:id
-`Response 200 OK`
+
 *Return an user that correspond to an id.*
+
+`Response 200 OK`
 ```
 {
     "id": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5",
@@ -155,8 +159,10 @@ $ npm run test:e2e
 ```
 
 `PATCH` /users/:id
-`Request`
+
 *Update an user that correspond to an id.*
+
+`Request`
 ```
 {
   "username" : "hanellej",
@@ -198,9 +204,11 @@ $ npm run test:e2e
 ```
 
 ### `POST` /events
+
 *Creat an event.*
 
 `Request`
+
 ```
 {
   "trailId" : "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
@@ -211,7 +219,9 @@ $ npm run test:e2e
   "reservationUntill" : "20221230"
 }
 ```
+
 `Response 201 Created`
+
 ```
 {
   "trailId": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
@@ -228,7 +238,9 @@ $ npm run test:e2e
 ```
 
 ### `GET` /events
+
 *Get all Events.*
+
 `Response 200(OK)`
 
 ```
@@ -241,6 +253,7 @@ $ npm run test:e2e
 
 
 ### `GET` /events/:id
+
 *Get an event that correspond to an id.*
 
 `Response 200 OK`
@@ -262,6 +275,7 @@ $ npm run test:e2e
 
 
 ### `PATCH` /events/:id
+
 *Update an event that correspond to an id.*
 
 `Request`
@@ -291,6 +305,7 @@ $ npm run test:e2e
 
 
 ### `DELETE` /events/:id
+
 *Delete an event and realational reservations that correspond to an id.*
 
 ```
@@ -448,8 +463,11 @@ $ npm run test:e2e
 ```
 
 ### `DELETE` /trails/:id
+
 *Delete a trail that correspond to an id.*
+
 `Response 200 OK`
+
 ```
 1 resource deleted successfully.
 ```
