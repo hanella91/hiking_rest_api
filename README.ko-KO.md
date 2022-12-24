@@ -15,21 +15,21 @@
   - [Auth(인증)](#auth인증)
     - [`POST` /auth/login](#post-authlogin)
   - [Users(사용자)](#users사용자)
-    - [`User Schema`](#user-schema)
+    - [`Schema`](#schema)
     - [`POST` /users](#post-users)
     - [`GET` /users/:id](#get-usersid)
     - [`PATCH` /users/:id](#patch-usersid)
   - [Events(등산이벤트)](#events등산이벤트)
-    - [`Schema`](#schema)
+    - [`Schema`](#schema-1)
     - [`POST` /events](#post-events)
     - [`GET` /events](#get-events)
     - [`GET` /events/:id](#get-eventsid)
     - [`PATCH` /events/:id](#patch-eventsid)
     - [`DELETE` /events/:id](#delete-eventsid)
   - [Reservations(예약)](#reservations예약)
-    - [`Schema`](#schema-1)
-  - [Trails(등산로)](#trails등산로)
     - [`Schema`](#schema-2)
+  - [Trails(등산로)](#trails등산로)
+    - [`Schema`](#schema-3)
     - [`POST` /trails](#post-trails)
     - [`GET` /trails](#get-trails)
     - [`GET` /trails/:id](#get-trailsid)
@@ -137,7 +137,7 @@ $ npm run test:e2e
 </br>
 
 ## Users(사용자)
-### `User Schema`
+### `Schema`
 ```
 {
   id: string,
