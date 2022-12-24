@@ -1,10 +1,10 @@
-import { IsIn, IsInt, IsString } from 'class-validator';
+import { IsDecimal, IsIn, IsInt, IsNumber, IsString } from 'class-validator';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 export enum DifficultyTypeEnum {
-    easiest = 'easiest',    //하
+    easy = 'easy',    //하
     moderate = 'moderate',  //중
-    strenous = 'strenous',  //상
+    hard = 'hard',  //상
 }
 
 type DifficultyType = keyof typeof DifficultyTypeEnum;
@@ -15,6 +15,10 @@ export class Trail {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
+    @Column({ name: 'mountain_name' })
+    @IsString()
+    mountainName: string;
+
     @Column({ name: 'trail_name' })
     @IsString()
     trailName: string;
@@ -22,8 +26,12 @@ export class Trail {
     @Column({ name: 'user_id' })
     userId: string;
 
+    @Column()
+    @IsNumber()
+    distance: number;
+
     @Column({ nullable: true })
-    @IsInt()
+    @IsNumber()
     duration: number;
 
     @Column()

@@ -1,5 +1,5 @@
 import { IsIn } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 enum StatusTypeEnum {
   requested = 'requested',
@@ -22,16 +22,16 @@ export class Reservation {
   @Column({ name: 'user_id' })
   userId: string;
 
-  @Column({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @Column({ nullable: true, name: 'updated_at' })
+  @UpdateDateColumn({ nullable: true, name: 'updated_at' })
   updatedAt: Date | null;
 
   @Column({ default: "requested" })
   @IsIn(StatusTypes)
   status: StatusType;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: null })
   queue: number | null;
 }

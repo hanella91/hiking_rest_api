@@ -1,5 +1,4 @@
-import { PickType } from '@nestjs/mapped-types';
-import { IsIn, IsString } from 'class-validator';
-import { Reservation } from '../entity/reservation.entity';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateReservationDto } from './create-reservation.dto';
 
-export class ReservationDto extends PickType(Reservation, ['status'] as const) { }
+export class UpdateReservationDto extends PartialType(CreateReservationDto) { }

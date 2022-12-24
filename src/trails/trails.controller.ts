@@ -36,7 +36,7 @@ export class TrailsController {
         if (null === existedTrail) {
             throw new HttpException(`trail not found for id: ${trailId}.`, HttpStatus.NOT_FOUND);
         }
-        
+
         return existedTrail
     }
 
@@ -46,7 +46,7 @@ export class TrailsController {
     }
 
     @Delete(':id')
-    async remove(@Request() req: any, @Param('id') id: string): Promise<DeleteResult> {
+    async remove(@Request() req: any, @Param('id') id: string): Promise<String> {
         return await this.trailsService.remove(req.user.userId, id);
 
     }

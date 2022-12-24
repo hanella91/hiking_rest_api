@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Redirect, Request, UseGuards } from '@nestjs/common';
 import { DeleteResult } from 'typeorm';
 import { Public } from '../auth/decorators/public.decorator';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entity/event.entity';
@@ -35,10 +34,10 @@ export class EventsController {
 
   @Patch(':id')
   async update(@Request() req: any, @Param('id') id: string, @Body() event: UpdateEventDto): Promise<Event> {
+    console.log(req.user);
     return await this.eventService.update(req.user.userId, id, event);
   }
 
-  @Public()
   @Delete(':id')
   async remove(@Request() req: any, @Param('id') id: string): Promise<DeleteResult> {
     return await this.eventService.remove(req.user.userId, id);

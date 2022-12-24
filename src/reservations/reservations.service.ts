@@ -1,11 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ReservationDto } from './dto/update-reservation.dto';
+import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { Reservation } from './entity/reservation.entity';
-import * as uuid from 'uuid';
 import { EventsService } from '../events/events.service';
-import { throws } from 'assert';
 
 
 @Injectable()
@@ -25,12 +23,10 @@ export class ReservationsService {
       throw new HttpException(`This Event has been full(${memberCount}/${event.maxPersons})`, HttpStatus.FORBIDDEN);
     }
 
-    const newReservation = await this.reservationRepository.save({
+    return await this.reservationRepository.save({
       eventId,
-      userId: uuid.v4(),
-      createdAt: new Date()
+      userId: requestUser
     });
-    return newReservation;
   }
 
   async findAll(eventId: string): Promise<Reservation[]> {
@@ -41,7 +37,7 @@ export class ReservationsService {
     return await this.reservationRepository.findOneBy({ id });
   }
 
-  async update(id: string, reservation: ReservationDto) {
+  async update(id: string, reservation: UpdateReservationDto) {
     await
       this.reservationRepository
         .createQueryBuilder()

@@ -350,7 +350,5 @@ describe('Events module', () => {
         .delete(`/trails/adsfasdf`)
         .expect(404)
     });
-
-
-  })
+  });
 });

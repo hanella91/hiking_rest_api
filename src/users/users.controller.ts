@@ -15,6 +15,8 @@ export class UsersController {
    * @param user New user info for creating
    * @returns UserInfo
    */
+
+  @Public()
   @Post()
   async create(@Body() user: CreateUserDto): Promise<User> {
     try {
@@ -59,10 +61,10 @@ export class UsersController {
  * ERROR : If someone not own the user account try to update, 403Error
  */
 
-  @Public()
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(@Param('id') id: string, @Request() req: any, @Body() updateUserDto: UpdateUserDto): Promise<User | undefined> {
+    console.log(req.user)
     return await this.userService.update(req.user.userId, id, updateUserDto);
   }
 }

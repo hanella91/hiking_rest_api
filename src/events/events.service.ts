@@ -35,7 +35,8 @@ export class EventsService {
   async update(userId: string, id: string, updateEvent: UpdateEventDto): Promise<Event> {
     const existingEvent = await this.eventRepository.findOneBy({ id });
     console.log('userID : ', userId);
-    console.log('existingEvent : ', existingEvent.userId);
+    console.log('id', id)
+    console.log('existingEvent : ', existingEvent);
 
     if (null === existingEvent) {
       throw new HttpException(`event not found for id : ${id}`, HttpStatus.BAD_REQUEST);

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateDateColumn } from 'typeorm';
 import { CreateTrailDto } from './dto/create-trail.dto';
 import { UpdateTrailDto } from './dto/update-trail.dto';
 import { Trail } from './entity/trail.entity';
@@ -47,7 +47,7 @@ export class TrailsService {
         });
     }
 
-    async remove(userId: string, id: string): Promise<DeleteResult> {
+    async remove(userId: string, id: string): Promise<String> {
         const existingTrail: Trail = await this.trailsRepository.findOneBy({ id });
         if (null === existingTrail) {
             throw new HttpException(`trail not found for id : ${id}`, HttpStatus.NOT_FOUND);
@@ -56,6 +56,8 @@ export class TrailsService {
         if (existingTrail.userId !== userId) {
             throw new HttpException(`You don't have permission to access this resource.`, HttpStatus.FORBIDDEN);
         }
-        return await this.trailsRepository.delete(id);
+        const result = await this.trailsRepository.delete(id);
+
+        return `${result.affected} resource deleted successfully`;
     }
 }

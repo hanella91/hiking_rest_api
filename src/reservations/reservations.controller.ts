@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Post, Req, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { EventsService } from '../events/events.service';
-import { ReservationDto } from './dto/update-reservation.dto';
+import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { Reservation } from './entity/reservation.entity';
 import { ReservationsService } from './reservations.service';
 
@@ -13,20 +13,18 @@ export class ReservationsController {
   ) { }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  async create(@Request() req, @Param('id') eventId: string) {
+  async create(@Request() req, @Param('id') eventId: string): Promise<Reservation> {
+    console.log('hehe')
     const requestUser = req.user.userId
     return await this.reservationService.create(requestUser, eventId);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async findAll(@Param('id') eventId: string): Promise<Reservation[]> {
     return await this.reservationService.findAll(eventId);
   }
 
   @Get(':reservation_id')
-  @UseGuards(JwtAuthGuard)
   async findOne(@Param('reservation_id') id: string): Promise<Reservation | null> {
     const reservation = await this.reservationService.findOne(id);
     if (null === reservation) {
@@ -36,8 +34,7 @@ export class ReservationsController {
   }
 
   @Patch(':reservation_id')
-  @UseGuards(JwtAuthGuard)
-  async update(@Request() req, @Param('id') eventId: string, @Param('reservation_id') reservationId: string, @Body() reservation: ReservationDto): Promise<void> {
+  async update(@Request() req, @Param('id') eventId: string, @Param('reservation_id') reservationId: string, @Body() reservation: UpdateReservationDto): Promise<void> {
     const existingEvent = await this.findOne(eventId);
     const existingReservation = await this.findOne(reservationId);
     if (existingEvent.userId === req.user.userId || existingReservation.userId === req.user.userId) {

@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import { IsEmail, IsString } from 'class-validator';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -24,7 +23,6 @@ export class User {
   email: string;
 
   @Column({ nullable: true, name: 'avatar_url' })
-  @IsString()
   avatarUrl: string;
 
   @CreateDateColumn({ name: 'created_at' })
