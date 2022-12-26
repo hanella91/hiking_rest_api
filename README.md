@@ -1,5 +1,5 @@
 # Hiking REST API
-[README 한글 버전을 보고싶으시다면 여기를 클릭해주세요.](https://github.com/hanella91/hiking_rest_api/blob/master/README.ko-KO.md)ㅁㅇㅇ 
+[README 한글 버전을 보고싶으시다면 여기를 클릭해주세요.](https://github.com/hanella91/hiking_rest_api/blob/master/README.ko-KO.md)
 
 ## Overview
 - [Hiking REST API](#hiking-rest-api)
