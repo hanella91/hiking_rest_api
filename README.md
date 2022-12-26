@@ -596,9 +596,7 @@ $ npm run test:e2e
 # About me
 I'm a junior web developer with 1 year experience in Marketing solution company based on Java and Spring framework.
 
-My core values as a developer are meticulousness, proactive attitude, positive mindset, ability to collaborate, challenging spirit, and willingness to achieve and learn.
-
-
+I am a curious, proactive, thorough and positive person. I am also a new technologies enthusiast that is always willing to learn new things and share knowledge. I enjoy being challenged and receiving feedbacks as it give me the opportunity to improve.
 
 
 
