@@ -52,8 +52,8 @@ describe('Events module', () => {
           trailId: uuid.v4(),
           description: 'test test',
           date: new Date('2023-01-01'),
-          maxPersons: 10,
-          reservationType: 'auto',
+          maxReservation: 10,
+          reservationType: 'automatic',
           reservationUntill: new Date('2022-12-30'),
         }
 
@@ -171,8 +171,8 @@ describe('Events module', () => {
           trailId: uuid.v4(),
           description: 'test test',
           date: new Date('2023-01-01'),
-          maxPersons: 10,
-          reservationType: 'auto',
+          maxReservation: 10,
+          reservationType: 'automatic',
           reservationUntill: new Date('2023-01-01'),
         }));
 
@@ -181,8 +181,8 @@ describe('Events module', () => {
           trailId: uuid.v4(),
           description: 'test2222',
           date: new Date('2023-01-01'),
-          maxPersons: 5,
-          reservationType: 'auto',
+          maxReservation: 5,
+          reservationType: 'automatic',
           reservationUntill: new Date('2023-01-01'),
         }));
 
@@ -215,7 +215,7 @@ describe('Events module', () => {
           description: 'test test',
           date: new Date('2023-01-01'),
           maxPersons: 10,
-          reservationType: 'auto',
+          reservationType: 'automatic',
           reservationUntill: new Date('2023-01-01'),
         });
 
@@ -250,13 +250,13 @@ describe('Events module', () => {
           description: 'test test',
           date: new Date('2023-01-01'),
           maxPersons: 10,
-          reservationType: 'auto',
+          reservationType: 'automatic',
           reservationUntill: new Date('2023-01-01'),
         });
         const updateEvent: UpdateEventDto = {
           trailId: uuid.v4(),
           description: 'test test',
-          maxPersons: 3,
+          maxReservation: 3,
           reservationType: 'manual',
           reservationUntill: new Date('2022-12-25')
         };
@@ -285,8 +285,8 @@ describe('Events module', () => {
           trailId: uuid.v4(),
           description: 'test test',
           date: new Date('2023-01-01'),
-          maxPersons: 10,
-          reservationType: 'auto',
+          maxReservation: 10,
+          reservationType: 'automatic',
           reservationUntill: new Date('2023-01-01')
         })
         await request(app.getHttpServer())
@@ -306,8 +306,8 @@ describe('Events module', () => {
         trailId: uuid.v4(),
         description: 'test test',
         date: new Date('2023-01-01'),
-        maxPersons: 10,
-        reservationType: 'auto',
+        maxReservation: 10,
+        reservationType: 'automatic',
         reservationUntill: new Date('2023-01-01')
       });
 
@@ -325,8 +325,8 @@ describe('Events module', () => {
         trailId: uuid.v4(),
         description: 'test test',
         date: new Date('2023-01-01'),
-        maxPersons: 10,
-        reservationType: 'auto',
+        maxReservation: 10,
+        reservationType: 'automatic',
         reservationUntill: new Date('2023-01-01')
       });
 
@@ -341,8 +341,8 @@ describe('Events module', () => {
         trailId: uuid.v4(),
         description: 'test test',
         date: new Date('2023-01-01'),
-        maxPersons: 10,
-        reservationType: 'auto',
+        maxReservation: 10,
+        reservationType: 'automatic',
         reservationUntill: new Date('2023-01-01')
       });
 

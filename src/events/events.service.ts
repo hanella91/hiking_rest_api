@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
+import { Reservation } from '../reservations/entity/reservation.entity';
+import { ReservationsService } from '../reservations/reservations.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entity/event.entity';
@@ -14,8 +16,8 @@ export class EventsService {
   ) { }
 
   async create(userId: string, event: CreateEventDto): Promise<Event> {
-    if (event.maxPersons <= 1) {
-      throw new HttpException(`maxPersons should be more than 1`, HttpStatus.BAD_REQUEST);
+    if (event.maxReservation <= 1) {
+      throw new HttpException(`maxReservation should be more than 1`, HttpStatus.BAD_REQUEST);
     }
 
     return await this.eventRepository.save({
@@ -34,10 +36,6 @@ export class EventsService {
 
   async update(userId: string, id: string, updateEvent: UpdateEventDto): Promise<Event> {
     const existingEvent = await this.eventRepository.findOneBy({ id });
-    console.log('userID : ', userId);
-    console.log('id', id)
-    console.log('existingEvent : ', existingEvent);
-
     if (null === existingEvent) {
       throw new HttpException(`event not found for id : ${id}`, HttpStatus.BAD_REQUEST);
     }
@@ -61,6 +59,7 @@ export class EventsService {
     if (existingEvent.userId !== userId) {
       throw new HttpException(`You don't have permission to access this resource.`, HttpStatus.FORBIDDEN);
     }
+
 
     return await this.eventRepository.delete(id);
   }

@@ -3,7 +3,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 
 enum ReservationTypeEnum {
   manual = 'manual',
-  auto = 'auto'
+  automatic = 'automatic'
 }
 
 type ReservationType = keyof typeof ReservationTypeEnum;
@@ -23,11 +23,11 @@ export class Event {
   @IsString()
   userId: string;
 
-  @Column({ name: 'max_persons', })
+  @Column({ name: 'max_reservation', })
   @IsInt()
-  maxPersons: number;
+  maxReservation: number;
 
-  @Column({ type: Date })
+  @Column()
   @IsString()
   date: Date;
 
@@ -47,7 +47,7 @@ export class Event {
   @IsIn(ReservationTypes)
   reservationType: ReservationType;
 
-  @Column({ name: 'reservation_untill', type: Date })
+  @Column({ name: 'reservation_untill' })
   @IsString()
   reservationUntill: Date;
 }

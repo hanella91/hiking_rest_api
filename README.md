@@ -1,5 +1,5 @@
 # Hiking REST API
-Hiking group matching website API application
+[README 한글 버전을 보고싶으시다면 여기를 클릭해주세요.](https://github.com/hanella91/hiking_rest_api/blob/master/README.ko-KO.md)ㅁㅇㅇ 
 
 ## Overview
 - [Hiking REST API](#hiking-rest-api)
@@ -14,8 +14,10 @@ Hiking group matching website API application
   - [Run functional Tests.](#run-functional-tests)
 - [REST API Documentation](#rest-api-documentation)
   - [Auth](#auth)
+    - [`POST` /auth/login](#post-authlogin)
   - [Users](#users)
     - [`Schema`](#schema)
+    - [`POST` /users](#post-users)
     - [`GET` /users/:id](#get-usersid)
   - [Events](#events)
     - [`Schema`](#schema-1)
@@ -39,7 +41,13 @@ Hiking group matching website API application
 - [About me](#about-me)
 
 # General description
-Rest API server for a web site where members can communicate with each other, find various hiking trails and meetings, and enjoy hiking with other users.
+* This is a personal project in order to conprehend modern javascript technologies.
+
+* This project is a REST API server that functions to create user accounts / view user profiles / register and share hiking trail information / create events using hiking trail information / apply for participation in created events and accept or reject reservations.
+
+* Bugs occurring in the project are continuously being fixed
+
+* UPCOMMING: Swagger and unit tests will be updated.
 
 </br>
 
@@ -58,7 +66,7 @@ Rest API server for a web site where members can communicate with each other, fi
 
 - Mysql server
 
-to not have to install mysql on your local machine, i recommend to install docker and lunch mysql with the command given in the setup.
+If you wouldn't like to install mysql on your local machine, i recommend to install docker and lunch mysql with the command given in the setup.
 
 ## Installation
 
@@ -70,15 +78,17 @@ password : 1234
 Database : hikers
 ```
 
-docker run command:
+mysql start command on docker:
 ```
-$ docker run mysql -p
+$ docker pull mysql
+$ docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=<password> -d -p 3306:3306 mysql:latest
+$ docker start mysql-container
 ```
 
 To run this project, install it locally using npm:
 
 ```
-$ cd ../hikers
+$ git clone https://github.com/hanella91/hiking_rest_api.git
 $ npm install
 $ npm start
 ```
@@ -86,36 +96,53 @@ $ npm start
 # Usage
 ## Start local server
 ```
-$ cd ../hikers
+$  cd <workspace name>
 $ npm run start
 ```
 
 
 ## Run functional Tests.
 ```
-$ cd ../hikers
+$ cd <workspace name>
 $ npm run test:e2e
 ```
 
 # REST API Documentation
 ## Auth
+### `POST` /auth/login
+`Request`
 
+*Return access token for logged-in user.*
+```
+{
+  "username" : "hanellej",
+  "password" : "abcd1234"
+}
+```
+
+`Response 201 Created`
+
+```
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImhhbmVsbGVqIiwidXNlcklkIjoiNzJmMjVmZWYtNjA5Ny00YzI1LWI1YjYtYWEyM2YzNmE3YmM1IiwiaWF0IjoxNjcxOTAxNDEwLCJleHAiOjE2NzE5MDUwMTB9.-R2d2vXOykXBB7l6UAlsGEvFT6kyM5rq4sv8sY8mvd8"
+}
+```
 
 ## Users
 ### `Schema`
 ```
 {
   id: string,
-  user_name: string,
+  username: string,
   password : string,
   name: string,
   email: string,
-  avatar_url: string,
-  created_at: string
+  avatarUrl: string,
+  createdAt: Date
 }
 ```
 
-`POST` /users
+### `POST` /users
 
 *Create new user*
 
@@ -132,19 +159,20 @@ $ npm run test:e2e
 `Response 201 Created`
 ```
 {
+  "id": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5",
   "username": "hanellej",
-  "password": "$2b$10$NLXMDFqnmRy1pDZvAGqE7eJHBlyUmYNMlafObs21W6PHUxgNbEFNi",
   "name": "Hanelle Jeong",
   "email": "hanelle@gmail.com",
   "avatarUrl": "https://gravatar.com/avatar/22f8eec523f818e55f9536b8c10b503c?s=200&d=robohash&r=x",
-  "createdAt": "2022-12-24T17:02:25.048Z",
-  "id": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5"
+  "createdAt": "2022-12-24T17:02:25.048Z"
 }
 ```
 
 ### `GET` /users/:id
 
-*Return an user that correspond to an id.*
+*Return an user for an given id.*
+
+- when the logged-in user is the owner of given id.
 
 `Response 200 OK`
 ```
@@ -158,15 +186,26 @@ $ npm run test:e2e
 }
 ```
 
+- when the logged-in user is not the owner of given id.
+`Response 200 OK`
+```
+{
+    "id": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5",
+    "username": "hanellej",
+    "name": "Hanelle Jeong",
+    "avatarUrl": "https://gravatar.com/avatar/22f8eec523f818e55f9536b8c10b503c?s=200&d=robohash&r=x",
+    "createdAt": "2022-12-24T08:02:25.048Z",
+}
+```
+
 `PATCH` /users/:id
 
-*Update an user that correspond to an id.*
+*Update an user for an given id.*
 
 `Request`
 ```
 {
-  "username" : "hanellej",
-  "name" : "Changed Name",
+  "name" : "New Name",
   "avatarUrl" : null
 }
 ```
@@ -174,13 +213,12 @@ $ npm run test:e2e
 `Response 200 OK`
 ```
 {
-    "id": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5",
-    "username": "hanellej",
-    "password": "$2b$10$1ZGIImpVuh5LTkO4r2kINO09oUH4EV8B.aUqXSrEMuWGUPQLnPsY6",
-    "name": "Changed Name",
-    "email": "hanelle@gmail.com",
-    "avatarUrl": null,
-    "createdAt": "2022-12-24T17:02:25.048Z",
+  "id": "ae314e83-aa93-4022-8b19-936c920d5442",
+  "username": "hanellej",
+  "name": "New Name",
+  "email": "hanelle@gmail.com",
+  "avatarUrl": null,
+  "createdAt": "2022-12-25T19:22:21.529Z"
 }
 ```
 
@@ -192,20 +230,20 @@ $ npm run test:e2e
 ```
 {
   id: string,
-  trail_id: string
-  user_id: Date,
-  max_persons: string,
-  date: string,
+  trailId: string
+  userId: string,
+  maxReservation: string,
+  date: Date,
   description: string,
-  created_at: string,
-  reservation_type: string,
-  reservation_untill: string,
+  created_at: Date,
+  reservationType: Enum,    //ReservationType(manual, automatic)
+  reservationtill: Date,
 }
 ```
 
 ### `POST` /events
 
-*Creat an event.*
+*Creat new event.*
 
 `Request`
 
@@ -213,10 +251,10 @@ $ npm run test:e2e
 {
   "trailId" : "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
   "maxPersons": 10,
-  "date" : "20230101",
+  "date" : "202301010600",
   "description" : "Let's hike together on the first day of 2023!",
   "reservationType" : "auto",
-  "reservationUntill" : "20221230"
+  "reservationUntill" : "202212302200"
 }
 ```
 
@@ -244,9 +282,23 @@ $ npm run test:e2e
 `Response 200(OK)`
 
 ```
-{
-    [event, event ....]
-}
+[
+  {
+    "id": "320340a9-f7f4-446f-965a-2fab9a2c4adc",
+    "trailId": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
+    "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
+    "maxReservation": 10,
+    "date": "2022-12-31T15:00:00.000Z",
+    "description": "Let's hike together on the first day of 2023!",
+    "createdAt": "2022-12-25T16:00:19.381Z",
+    "updatedAt": "2022-12-25T16:00:19.381Z",
+    "reservationType": "automatic",
+    "reservationUntill": "2022-12-29T15:00:00.000Z"
+  },
+  {
+    ...
+  }
+]
 ```
 
 
@@ -254,21 +306,21 @@ $ npm run test:e2e
 
 ### `GET` /events/:id
 
-*Get an event that correspond to an id.*
+*Get an event for given id*
 
 `Response 200 OK`
 
 ```
 {
-  "id": "122335e7-cd6f-458a-8a04-16bd33ab76a7",
+  "id": "320340a9-f7f4-446f-965a-2fab9a2c4adc",
   "trailId": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
-  "userId": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5",
-  "maxPersons": 10,
+  "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
+  "maxReservation": 10,
   "date": "2022-12-31T15:00:00.000Z",
   "description": "Let's hike together on the first day of 2023!",
-  "createdAt": "2022-12-24T10:02:18.384Z",
-  "updatedAt": "2022-12-24T10:02:18.384Z",
-  "reservationType": "auto",
+  "createdAt": "2022-12-25T16:00:19.381Z",
+  "updatedAt": "2022-12-25T16:00:19.381Z",
+  "reservationType": "automatic",
   "reservationUntill": "2022-12-29T15:00:00.000Z"
 }
 ```
@@ -276,7 +328,7 @@ $ npm run test:e2e
 
 ### `PATCH` /events/:id
 
-*Update an event that correspond to an id.*
+*Update an event for given id.*
 
 `Request`
 ```
@@ -290,27 +342,26 @@ $ npm run test:e2e
 
 ```
 {
-  "id": "122335e7-cd6f-458a-8a04-16bd33ab76a7",
+  "id": "320340a9-f7f4-446f-965a-2fab9a2c4adc",
   "trailId": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
-  "userId": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5",
-  "maxPersons": 12,
+  "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
+  "maxReservation": 10,
   "date": "2022-12-31T15:00:00.000Z",
   "description": "Hiking Event description updated!",
-  "createdAt": "2022-12-24T10:02:18.384Z",
-  "updatedAt": "2022-12-24T10:11:23.000Z",
+  "createdAt": "2022-12-25T16:00:19.381Z",
+  "updatedAt": "2022-12-25T16:59:05.000Z",
   "reservationType": "manual",
-  "reservationUntill": "2022-12-29T15:00:00.000Z"
+  "reservationUntill": "2022-12-29T15:00:00.000Z",
+  "maxPersons": 12
 }
 ```
 
 
 ### `DELETE` /events/:id
 
-*Delete an event and realational reservations that correspond to an id.*
+*Delete an event and realational reservations for given id.*
 
-```
-1 resource deleted successfully.
-```
+`Respose 204 No Content`
 
 </br>
 
@@ -319,29 +370,72 @@ $ npm run test:e2e
 ```
 {
   id: string,
-  user_name: string,
-  password : string,
-  name: string,
-  email: string,
-  avatar_url: string,
-  created_at: string
+  eventId: string,
+  userId : string,
+  createdAt: Date,
+  updatedAt: Date,
+  status: Enum,     // StatusType(requested, accepted, refused, canceled)
+  queue: number
 }
 ```
 
 ### `POST` /events/:eventId/reservation
 
-*Create a reservation that correspond to an eventId.*
+*Create a reservation for given eventId.*
+
+`Response 201 Created`
+```
+{
+  "eventId": "122335e7-cd6f-458a-8a04-16bd33ab76a7",
+  "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
+  "updatedAt": "2022-12-25T17:16:17.100Z",
+  "queue": null,
+  "id": "18ec5cfe-3a62-46e3-b583-f1ae46aa4665",
+  "createdAt": "2022-12-25T17:16:17.100Z",
+  "status": "requested"
+}
+```
 
 
 ### `GET` /events/:eventId/reservation/:id
 
-*Return a reservation that correspond to an eventId and id.*
+*Return a reservation for given eventId.*
+
+`Response 200 OK`
+```
+[
+  {
+      "id": "18ec5cfe-3a62-46e3-b583-f1ae46aa4665",
+      "eventId": "122335e7-cd6f-458a-8a04-16bd33ab76a7",
+      "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
+      "createdAt": "2022-12-25T17:16:17.100Z",
+      "updatedAt": "2022-12-25T17:16:17.100Z",
+      "status": "requested",
+      "queue": null
+  },
+  { ... }
+]
+```
 
 
 ### `PATCH` /events/:eventId/reservation/:id
 
-*Update the status of reservation that correspond to an eventId and id.*
+*Update the status of reservation for given eventId and id.*
 
+`Reqeust`
+```
+{
+  "status" : "accepted"
+}
+```
+
+`Reseponse 200 OK`
+```
+{
+  "status": "accepted",
+  "id": "18ec5cfe-3a62-46e3-b583-f1ae46aa4665"
+}
+```
 
 </br>
 
@@ -352,11 +446,11 @@ $ npm run test:e2e
 {
   id: string,
   mountainName: string,
-  trail_name: string,
-  user_id : string,
-  distance : int,
-  duration: int,
-  difficulty: DifficultyType // (easiest/moderate/strenous),
+  trailName: string,
+  userId : string,
+  distance : number,
+  duration: number,
+  difficulty: Enum,   // DifficultyType(easy/moderate/hard),
   startPoint: string,
   endPoint: string,
   createdAt: Date,
@@ -402,20 +496,32 @@ $ npm run test:e2e
 
 ### `GET` /trails
 
-*Get All Trails*
+*Return All Trails*
+
 ```
 [
   {
-    ...trail
+    "id": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
+    "mountainName": "Hallasan Mountain",
+    "trailName": "Seongpanak Trail",
+    "userId": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5",
+    "distance": 18,
+    "duration": 435,
+    "difficulty": "hard",
+    "startPoint": "Seongpanak",
+    "endPoint": "Summit",
+    "createdAt": "2022-12-24T10:01:23.392Z",
+    "updatedAt": "2022-12-24T10:01:23.392Z"
   },
   {
-    ...trail
+    ...
   }
 ]
 ```
+
 ### `GET` /trails/:id
 
-*Return a trail that correspond to an id.*
+*Return a trail for given id.*
 ```
 {
   "id": "aa86f939-e82b-4dd3-9d84-ae7bf79aebbe",
@@ -434,7 +540,7 @@ $ npm run test:e2e
 
 ### `PATCH` /trails/:id
 
-*Update a trail that correspond to an id.*
+*Update a trail for given id.*
 
 `Request`
 ```
@@ -466,17 +572,17 @@ $ npm run test:e2e
 
 *Delete a trail that correspond to an id.*
 
-`Response 200 OK`
-
-```
-1 resource deleted successfully.
-```
+`Respose 204 No Content`
 
 </br>
 
 
 # About me
-I'm a junior web developer with 1 year experience in Marketing solution company based on Java and Spring framework. I did this project in order to apprehend modern javascript backend skills to get wider and many different apportunity in my career by referring to the fact that many companies and startups provide services using the latest JavaScript technology. I will continue to update by adding Swagger and Unit Test codes.
+I'm a junior web developer with 1 year experience in Marketing solution company based on Java and Spring framework.
+
+I am curious about new technology and business, and I feel great pleasure in collaborating with colleagues, sharing knowledges, and growing together.
+
+I believe that my value is realized by embodying the value of the business and contributing to the growth of it. Therefore I like to work on my own initiative while properly understanding the purpose and value of the business.
 
 
 

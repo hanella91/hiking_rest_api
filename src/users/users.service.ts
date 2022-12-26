@@ -18,15 +18,16 @@ export class UsersService {
     private userRepository: Repository<User>
   ) { }
 
-  async create(newUser: CreateUserDto): Promise<User | undefined> {
+  async create(newUser: CreateUserDto): Promise<UserInfoWithoutPassword | undefined> {
     const existingUser = await this.userRepository.findOneBy({ username: newUser.username });
     if (existingUser) {
       throw new UserNameAlreadyExistError();
     }
 
-    const password = await this.transformPassword(newUser.password);
-
-    return await this.userRepository.save({ ...newUser, password, createdAt: new Date() });
+    const hashedPassword = await this.transformPassword(newUser.password);
+    const createdUser = await this.userRepository.save({ ...newUser, password: hashedPassword, createdAt: new Date() });
+    const { password, ...createdUserWithoutPassword } = createdUser;
+    return createdUserWithoutPassword;
   }
 
   async findOneByUsername(username: string): Promise<User | undefined> {
@@ -37,26 +38,30 @@ export class UsersService {
     return await this.userRepository.findOneBy({ id });
   }
 
-  async update(jwtUserId: string, id: string, updateUserDto: UpdateUserDto): Promise<User | undefined> {
+  async update(jwtUserId: string, id: string, updateUserDto: UpdateUserDto): Promise<UserInfoWithoutPassword | undefined> {
     const existingUser = await this.userRepository.findOneBy({ id });
 
     if (existingUser && existingUser.id !== jwtUserId) {
       throw new HttpException(`You don't have permission to access this resource.`, HttpStatus.FORBIDDEN);
     }
 
-    let { password } = existingUser
+    let  userPassword = existingUser.password
     if (updateUserDto.password) {
-      password = await this.transformPassword(updateUserDto.password);
+      userPassword = await this.transformPassword(updateUserDto.password);
     }
 
-
-    return await
+    const updatedUser = await
       this.userRepository.save({
         ...existingUser,
         ...updateUserDto,
         id,
-        password,
+        password : userPassword,
       });
+
+    const { password, ...updatedUserWithoutPassword } = updatedUser;
+    return updatedUserWithoutPassword;
+
+
   }
 
   private async transformPassword(password: string): Promise<string> {

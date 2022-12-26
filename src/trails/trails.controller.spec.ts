@@ -47,11 +47,13 @@ describe('Trails module', () => {
     it(`should create new trail then return new trail and created status code`,
       async () => {
         const newTrail: CreateTrailDto = {
-          trailName: "테스트",
+          mountainName: "Hallasan Mountain",
+          trailName: "테스트1",
+          distance: 18,
           duration: 60,
-          difficulty: "easiest",
-          startPoint: "금정산입구",
-          endPoint: "금정산입구"
+          difficulty: "easy",
+          startPoint: "성판악",
+          endPoint: "정상",
         };
 
         await request(app.getHttpServer())
@@ -159,11 +161,13 @@ describe('Trails module', () => {
 
         expectedTrails.push(await trailRepository.save({
           userId: uuid.v4(),
+          mountainName: "Hallasan Mountain",
           trailName: "테스트1",
+          distance: 18,
           duration: 60,
-          difficulty: "easiest",
-          startPoint: "금정산입구",
-          endPoint: "금정산입구",
+          difficulty: "easy",
+          startPoint: "성판악",
+          endPoint: "정상",
         }));
 
         expectedTrails.push(await trailRepository.save({
@@ -200,11 +204,13 @@ describe('Trails module', () => {
     it(`should return a trail info of given trail id.`, async () => {
       const expectedTrail = await trailRepository.save({
         userId: uuid.v4(),
+        mountainName: "Hallasan Mountain",
         trailName: "테스트1",
+        distance: 18,
         duration: 60,
-        difficulty: "easiest",
-        startPoint: "금정산입구",
-        endPoint: "금정산입구",
+        difficulty: "easy",
+        startPoint: "성판악",
+        endPoint: "정상",
       });
 
       await request(app.getHttpServer())
@@ -234,7 +240,7 @@ describe('Trails module', () => {
         id: trailIdforUpdate,
         trailName: "테스트1",
         duration: 60,
-        difficulty: DifficultyTypeEnum.easiest,
+        difficulty: DifficultyTypeEnum.easy,
         startPoint: "금정산입구",
         endPoint: "금정산입구",
       });
@@ -266,7 +272,7 @@ describe('Trails module', () => {
         id: trailIdforUpdate,
         trailName: "테스트1",
         duration: 60,
-        difficulty: DifficultyTypeEnum.easiest,
+        difficulty: DifficultyTypeEnum.easy,
         startPoint: "금정산입구",
         endPoint: "금정산입구",
       });
@@ -288,7 +294,7 @@ describe('Trails module', () => {
         userId: uuid.v4(),
         trailName: "테스트1",
         duration: 60,
-        difficulty: DifficultyTypeEnum.easiest,
+        difficulty: DifficultyTypeEnum.easy,
         startPoint: "금정산입구",
         endPoint: "금정산입구",
       });
@@ -306,7 +312,7 @@ describe('Trails module', () => {
         id: trailIdforDelete,
         trailName: "테스트",
         duration: 60,
-        difficulty: DifficultyTypeEnum.easiest,
+        difficulty: DifficultyTypeEnum.easy,
         startPoint: "금정산입구",
         endPoint: "금정산입구",
       });
@@ -326,7 +332,7 @@ describe('Trails module', () => {
         id: trailIdforDelete,
         trailName: "테스트",
         duration: 60,
-        difficulty: DifficultyTypeEnum.easiest,
+        difficulty: DifficultyTypeEnum.easy,
         startPoint: "금정산입구",
         endPoint: "금정산입구",
       });
@@ -343,7 +349,7 @@ describe('Trails module', () => {
         id: trailIdforDelete,
         trailName: "테스트",
         duration: 60,
-        difficulty: DifficultyTypeEnum.easiest,
+        difficulty: DifficultyTypeEnum.easy,
         startPoint: "금정산입구",
         endPoint: "금정산입구",
       });

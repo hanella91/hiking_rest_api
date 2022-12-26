@@ -34,11 +34,14 @@ export class ReservationsController {
   }
 
   @Patch(':reservation_id')
-  async update(@Request() req, @Param('id') eventId: string, @Param('reservation_id') reservationId: string, @Body() reservation: UpdateReservationDto): Promise<void> {
-    const existingEvent = await this.findOne(eventId);
-    const existingReservation = await this.findOne(reservationId);
+  async update(@Request() req, @Param('id') eventId: string, @Param('reservation_id') reservationId: string, @Body() reservation: UpdateReservationDto): Promise<Reservation> {
+    console.log(eventId);
+    console.log(reservationId);
+
+    const existingEvent = await this.eventService.findOne(eventId);
+    const existingReservation = await this.reservationService.findOne(reservationId);
     if (existingEvent.userId === req.user.userId || existingReservation.userId === req.user.userId) {
-      await this.reservationService.update(eventId, reservation);
+      return await this.reservationService.update(reservationId, reservation);
     }
     if (null === existingReservation) {
       throw new HttpException(`reservation not found for id : ${reservationId}`, HttpStatus.BAD_REQUEST);

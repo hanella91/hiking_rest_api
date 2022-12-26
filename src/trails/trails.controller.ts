@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Put, Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Patch, Post, Put, Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { throws } from 'assert';
 import { DeleteResult } from 'typeorm';
 import { Public } from '../auth/decorators/public.decorator';
@@ -45,8 +45,9 @@ export class TrailsController {
         return await this.trailsService.update(req.user.userId, trailId, trail);
     }
 
+    @HttpCode(204)
     @Delete(':id')
-    async remove(@Request() req: any, @Param('id') id: string): Promise<String> {
+    async remove(@Request() req: any, @Param('id') id: string): Promise<void> {
         return await this.trailsService.remove(req.user.userId, id);
 
     }

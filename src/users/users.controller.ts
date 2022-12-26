@@ -18,7 +18,7 @@ export class UsersController {
 
   @Public()
   @Post()
-  async create(@Body() user: CreateUserDto): Promise<User> {
+  async create(@Body() user: CreateUserDto): Promise<UserInfoWithoutPassword> {
     try {
       return await this.userService.create(user);
     } catch (error) {
@@ -63,8 +63,7 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, @Request() req: any, @Body() updateUserDto: UpdateUserDto): Promise<User | undefined> {
-    console.log(req.user)
+  async update(@Param('id') id: string, @Request() req: any, @Body() updateUserDto: UpdateUserDto): Promise<UserInfoWithoutPassword | undefined> {
     return await this.userService.update(req.user.userId, id, updateUserDto);
   }
 }

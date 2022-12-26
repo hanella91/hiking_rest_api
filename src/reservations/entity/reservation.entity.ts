@@ -4,7 +4,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 enum StatusTypeEnum {
   requested = 'requested',
   accepted = 'accepted',
-  denied = 'denied',
+  refused = 'refused',
   canceled = 'canceled'
 }
 

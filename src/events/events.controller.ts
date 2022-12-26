@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Redirect, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Patch, Post, Redirect, Request, UseGuards } from '@nestjs/common';
 import { DeleteResult } from 'typeorm';
 import { Public } from '../auth/decorators/public.decorator';
+import { ReservationsService } from '../reservations/reservations.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entity/event.entity';
@@ -9,7 +10,10 @@ import { EventsService } from './events.service';
 
 @Controller('events')
 export class EventsController {
-  constructor(private eventService: EventsService) { }
+  constructor(
+    private eventService: EventsService,
+    private reservationservice: ReservationsService
+  ) { }
 
   @Post()
   async create(@Request() req: any, @Body() event: CreateEventDto): Promise<Event> {
@@ -39,7 +43,9 @@ export class EventsController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   async remove(@Request() req: any, @Param('id') id: string): Promise<DeleteResult> {
+    await this.reservationservice.removeByEventId(id);
     return await this.eventService.remove(req.user.userId, id);
   }
 };
