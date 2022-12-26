@@ -82,7 +82,7 @@ Mysql 데이터베이스 서버
 
 DB 정보
 ```
-port: 3304
+port: 3306
 host : root
 password : 1234
 Database : hikers
@@ -128,9 +128,10 @@ $ npm run test:e2e
 # REST API 문서
 ## Auth(인증)
 ### `POST` /auth/login
-`Request`
 
 *ID와 PW가 일치한 유저에 한해 토큰을 반환합니다.*
+
+`Request`
 ```
 {
   "username" : "hanellej",

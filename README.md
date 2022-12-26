@@ -20,6 +20,7 @@
     - [`Schema`](#schema)
     - [`POST` /users](#post-users)
     - [`GET` /users/:id](#get-usersid)
+    - [`PATCH` /users/:id](#patch-usersid)
   - [Events](#events)
     - [`Schema`](#schema-1)
     - [`POST` /events](#post-events)
@@ -70,13 +71,13 @@
 
 - Mysql server
 
-If you wouldn't like to install mysql on your local machine, i recommend to install docker and lunch mysql with the command given in the setup.
+If you wouldn't like to install mysql on your local machine, I recommend to install docker and lunch mysql with the command given in the setup.
 
 ## Installation
 
 Database info:
 ```
-port: 3304
+port: 3306
 host : root
 password : 1234
 Database : hikers
@@ -110,9 +111,11 @@ $ npm run test:e2e
 # REST API Documentation
 ## Auth
 ### `POST` /auth/login
-`Request`
 
 *Return access token for a logged-in user.*
+
+`Request`
+
 ```
 {
   "username" : "hanellej",
@@ -189,7 +192,7 @@ $ npm run test:e2e
 
  </br>
 
-`PATCH` /users/:id
+### `PATCH` /users/:id
 
 *Update an user for a given id.*
 
@@ -271,7 +274,7 @@ $ npm run test:e2e
 
 *Get all Events.*
 
-`Response 200(OK)`
+`Response 200 OK `
 
 ```
 [
