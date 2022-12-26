@@ -45,7 +45,7 @@
 - [About me](#about-me)
 
 # General description
-* This is a personal project in order to conprehend modern javascript technologies.
+* This is a personal project in order to learn modern javascript technologies.
 
 * This project is a REST API server that functions to create user accounts / view user profiles / register and share hiking trail information / create events using hiking trail information / apply for participation in created events and accept or reject reservations.
 
