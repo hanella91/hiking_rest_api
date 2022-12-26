@@ -21,8 +21,8 @@ export class ReservationsService {
     const memberCount = (await this.reservationRepository.findBy(condition)).length;
     console.log(event);
 
-    if (memberCount >= event.maxReservation) {
-      throw new HttpException(`This Event has been full(${memberCount}/${event.maxReservation})`, HttpStatus.FORBIDDEN);
+    if (memberCount >= event.maxReservations) {
+      throw new HttpException(`This Event has been full(${memberCount}/${event.maxReservations})`, HttpStatus.FORBIDDEN);
     }
 
     return await this.reservationRepository.save({

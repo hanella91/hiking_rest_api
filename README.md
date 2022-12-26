@@ -1,5 +1,6 @@
 # Hiking REST API
-[README 한글 버전을 보고싶으시다면 여기를 클릭해주세요.](https://github.com/hanella91/hiking_rest_api/blob/master/README.ko-KO.md)
+[README(KR) </br>
+*README 한글 버전은 여기를 클릭해주세요.*](https://github.com/hanella91/hiking_rest_api/blob/master/README.ko-KO.md)
 
 ## Overview
 - [Hiking REST API](#hiking-rest-api)
@@ -27,6 +28,9 @@
     - [`PATCH` /events/:id](#patch-eventsid)
     - [`DELETE` /events/:id](#delete-eventsid)
   - [Reservations](#reservations)
+    - [**Reservation status workflow**](#reservation-status-workflow)
+    - [- manual reservation ](#--manual-reservation-)
+    - [- automatic reservation](#--automatic-reservation)
     - [`Schema`](#schema-2)
     - [`POST` /events/:eventId/reservation](#post-eventseventidreservation)
     - [`GET` /events/:eventId/reservation/:id](#get-eventseventidreservationid)
@@ -80,30 +84,26 @@ Database : hikers
 
 mysql start command on docker:
 ```
-$ docker pull mysql
-$ docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=<password> -d -p 3306:3306 mysql:latest
-$ docker start mysql-container
+$ docker run -e MYSQL_ROOT_PASSWORD=<password> -d -p 3306:3306 mysql:latest
 ```
 
 To run this project, install it locally using npm:
 
 ```
 $ git clone https://github.com/hanella91/hiking_rest_api.git
+$ cd hiking_rest_api
 $ npm install
-$ npm start
 ```
 
 # Usage
 ## Start local server
 ```
-$  cd <workspace name>
 $ npm run start
 ```
 
 
 ## Run functional Tests.
 ```
-$ cd <workspace name>
 $ npm run test:e2e
 ```
 
@@ -112,7 +112,7 @@ $ npm run test:e2e
 ### `POST` /auth/login
 `Request`
 
-*Return access token for logged-in user.*
+*Return access token for a logged-in user.*
 ```
 {
   "username" : "hanellej",
@@ -170,9 +170,8 @@ $ npm run test:e2e
 
 ### `GET` /users/:id
 
-*Return an user for an given id.*
+*Return an user for a given id.*
 
-- when the logged-in user is the owner of given id.
 
 `Response 200 OK`
 ```
@@ -186,21 +185,13 @@ $ npm run test:e2e
 }
 ```
 
-- when the logged-in user is not the owner of given id.
-`Response 200 OK`
-```
-{
-    "id": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5",
-    "username": "hanellej",
-    "name": "Hanelle Jeong",
-    "avatarUrl": "https://gravatar.com/avatar/22f8eec523f818e55f9536b8c10b503c?s=200&d=robohash&r=x",
-    "createdAt": "2022-12-24T08:02:25.048Z",
-}
-```
+*when the logged-in user is not the owner of given id, 'email' will not be returned.*
+
+ </br>
 
 `PATCH` /users/:id
 
-*Update an user for an given id.*
+*Update an user for a given id.*
 
 `Request`
 ```
@@ -225,6 +216,7 @@ $ npm run test:e2e
 </br>
 
 ## Events
+
 ### `Schema`
 
 ```
@@ -232,11 +224,11 @@ $ npm run test:e2e
   id: string,
   trailId: string
   userId: string,
-  maxReservation: string,
+  maxReservations: number,
   date: Date,
   description: string,
   created_at: Date,
-  reservationType: Enum,    //ReservationType(manual, automatic)
+  reservationType: Enum,    // manual, automatic
   reservationtill: Date,
 }
 ```
@@ -250,11 +242,11 @@ $ npm run test:e2e
 ```
 {
   "trailId" : "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
-  "maxPersons": 10,
-  "date" : "202301010600",
+  "maxReservations": 10,
+  "date" : "2023-01-01T06:00:00.000Z",
   "description" : "Let's hike together on the first day of 2023!",
-  "reservationType" : "auto",
-  "reservationUntill" : "202212302200"
+  "reservationType" : "automatic",
+  "reservationUntill" : "2023-01-01T00:00:00.000Z"
 }
 ```
 
@@ -262,16 +254,16 @@ $ npm run test:e2e
 
 ```
 {
-  "trailId": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
-  "maxPersons": 10,
-  "date": "20230101",
-  "description": "Let's hike together on the first day of 2023!",
-  "reservationType": "auto",
-  "reservationUntill": "20221230",
-  "userId": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5",
-  "updatedAt": "2022-12-24T10:02:18.384Z",
-  "id": "122335e7-cd6f-458a-8a04-16bd33ab76a7",
-  "createdAt": "2022-12-24T10:02:18.384Z"
+    "trailId": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
+    "maxReservations": 10,
+    "date": "2023-01-01T06:00:00.000Z",
+    "description": "Let's hike together on the first day of 2023!",
+    "reservationType": "automatic",
+    "reservationUntill": "2023-01-01T00:00:00.000Z",
+    "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
+    "updatedAt": "2022-12-25T23:22:01.013Z",
+    "id": "0c4aae99-ccac-4d69-bb4b-13e146da6c8b",
+    "createdAt": "2022-12-25T23:22:01.013Z"
 }
 ```
 
@@ -287,7 +279,7 @@ $ npm run test:e2e
     "id": "320340a9-f7f4-446f-965a-2fab9a2c4adc",
     "trailId": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
     "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
-    "maxReservation": 10,
+    "maxReservations": 10,
     "date": "2022-12-31T15:00:00.000Z",
     "description": "Let's hike together on the first day of 2023!",
     "createdAt": "2022-12-25T16:00:19.381Z",
@@ -315,13 +307,13 @@ $ npm run test:e2e
   "id": "320340a9-f7f4-446f-965a-2fab9a2c4adc",
   "trailId": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
   "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
-  "maxReservation": 10,
+  "maxReservations": 10,
   "date": "2022-12-31T15:00:00.000Z",
   "description": "Let's hike together on the first day of 2023!",
-  "createdAt": "2022-12-25T16:00:19.381Z",
-  "updatedAt": "2022-12-25T16:00:19.381Z",
   "reservationType": "automatic",
   "reservationUntill": "2022-12-29T15:00:00.000Z"
+  "createdAt": "2022-12-25T16:00:19.381Z",
+  "updatedAt": "2022-12-25T16:00:19.381Z",
 }
 ```
 
@@ -333,7 +325,7 @@ $ npm run test:e2e
 `Request`
 ```
 {
-  "maxPersons": 12,
+  "maxReservations": 12,
   "description" : "Hiking Event description updated!",
   "reservationType" : "manual"
 }
@@ -345,14 +337,13 @@ $ npm run test:e2e
   "id": "320340a9-f7f4-446f-965a-2fab9a2c4adc",
   "trailId": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
   "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
-  "maxReservation": 10,
-  "date": "2022-12-31T15:00:00.000Z",
+  "maxReservations": 10,
+  "date": "2022-12-31T06:00:00.000Z",
   "description": "Hiking Event description updated!",
   "createdAt": "2022-12-25T16:00:19.381Z",
   "updatedAt": "2022-12-25T16:59:05.000Z",
   "reservationType": "manual",
-  "reservationUntill": "2022-12-29T15:00:00.000Z",
-  "maxPersons": 12
+  "reservationUntill": "2023-01-01T15:00:00.000Z",
 }
 ```
 
@@ -366,6 +357,20 @@ $ npm run test:e2e
 </br>
 
 ## Reservations
+
+### **Reservation status workflow**
+
+  ### - manual reservation </br>
+
+  default  : requested </br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | -> accepted </br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | -> refused </br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | -> canceled </br>
+
+  ### - automatic reservation</br>
+  default : accepted
+
+
 ### `Schema`
 ```
 {
@@ -374,25 +379,32 @@ $ npm run test:e2e
   userId : string,
   createdAt: Date,
   updatedAt: Date,
-  status: Enum,     // StatusType(requested, accepted, refused, canceled)
+  status: Enum,     // requested, accepted, refused, canceled
   queue: number
 }
 ```
+*-queue will be created aumatically when the created reservation count is bigger than maxReservation of event.*
+
+</br>
 
 ### `POST` /events/:eventId/reservation
 
 *Create a reservation for given eventId.*
 
+`Reqest`
+
+*- This request doesn't require any Request body.*
+
 `Response 201 Created`
 ```
 {
+  "id": "18ec5cfe-3a62-46e3-b583-f1ae46aa4665",
   "eventId": "122335e7-cd6f-458a-8a04-16bd33ab76a7",
   "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
   "updatedAt": "2022-12-25T17:16:17.100Z",
-  "queue": null,
-  "id": "18ec5cfe-3a62-46e3-b583-f1ae46aa4665",
   "createdAt": "2022-12-25T17:16:17.100Z",
   "status": "requested"
+  "queue": null,
 }
 ```
 
@@ -441,6 +453,7 @@ $ npm run test:e2e
 
 
 ## Trails
+
 ### `Schema`
 ```
 {
@@ -448,9 +461,9 @@ $ npm run test:e2e
   mountainName: string,
   trailName: string,
   userId : string,
-  distance : number,
-  duration: number,
-  difficulty: Enum,   // DifficultyType(easy/moderate/hard),
+  distance : number,  // km
+  duration: number,   // minutes
+  difficulty: Enum,   // easy, moderate, hard
   startPoint: string,
   endPoint: string,
   createdAt: Date,
@@ -580,9 +593,7 @@ $ npm run test:e2e
 # About me
 I'm a junior web developer with 1 year experience in Marketing solution company based on Java and Spring framework.
 
-I am curious about new technology and business, and I feel great pleasure in collaborating with colleagues, sharing knowledges, and growing together.
-
-I believe that my value is realized by embodying the value of the business and contributing to the growth of it. Therefore I like to work on my own initiative while properly understanding the purpose and value of the business.
+My core values as a developer are meticulousness, proactive attitude, positive mindset, ability to collaborate, challenging spirit, and willingness to achieve and learn.
 
 
 

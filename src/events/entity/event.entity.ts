@@ -25,7 +25,7 @@ export class Event {
 
   @Column({ name: 'max_reservation', })
   @IsInt()
-  maxReservation: number;
+  maxReservations: number;
 
   @Column()
   @IsString()

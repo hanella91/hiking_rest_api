@@ -16,7 +16,7 @@ export class EventsService {
   ) { }
 
   async create(userId: string, event: CreateEventDto): Promise<Event> {
-    if (event.maxReservation <= 1) {
+    if (event.maxReservations <= 1) {
       throw new HttpException(`maxReservation should be more than 1`, HttpStatus.BAD_REQUEST);
     }
 
