@@ -27,9 +27,6 @@
     - [`PATCH` /events/:id](#patch-eventsid)
     - [`DELETE` /events/:id](#delete-eventsid)
   - [Reservations(예약)](#reservations예약)
-    - [**Reservation status workflow(예약 상태 절차)**](#reservation-status-workflow예약-상태-절차)
-    - [- manual reservation(수동 예약) ](#--manual-reservation수동-예약-)
-    - [- automatic reservation(자동 예약) ](#--automatic-reservation자동-예약-)
     - [`Schema`](#schema-2)
     - [`POST` /events/:eventId/reservation](#post-eventseventidreservation)
     - [`GET` /events/:eventId/reservation/:id](#get-eventseventidreservationid)
@@ -154,7 +151,7 @@ $ npm run test:e2e
 ```
 {
   id: string,
-  username: string,
+  username: string,e
   password : string,
   name: string,
   email: string,
@@ -194,7 +191,6 @@ $ npm run test:e2e
 
 *입력된 id에 해당하는 회원의 정보를 반환합니다.*
 
-- 본인의 프로필 조회
 `Response 200 OK`
 ```
 {
@@ -207,16 +203,10 @@ $ npm run test:e2e
 }
 ```
 
-- 타인의 프로필 조회
-```
-{
-  "id": "01f4499f-c49a-4185-9ff4-76b263d66d5b",
-  "username": "abcde",
-  "name": "ABCDE",
-  "avatarUrl": "https://gravatar.com/avatar/22f8eec523f818e55f9536b8c10b503c?s=200&d=robohash&r=x",
-  "createdAt": "2022-12-25T14:13:43.395Z"
-}
-```
+*타인의 프로필을 조회할 경우에는 email이 반환되지 않습니다.*
+
+</br>
+
 
 ###  `PATCH` /users/:id
 `Request`
@@ -374,16 +364,16 @@ $ npm run test:e2e
 
 ## Reservations(예약)
 
-### **Reservation status workflow(예약 상태 절차)**
+ **Reservation status workflow(예약 상태 절차)**
 
-  ### - manual reservation(수동 예약) </br>
+- manual reservation(수동 예약) </br>
 
   default  : requested(요청) </br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | -> accepted(수락) </br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | -> refused(거절) </br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | -> canceled(취소) </br>
 
-  ### - automatic reservation(자동 예약) </br>
+- automatic reservation(자동 예약) </br>
   default : accepted(수락)
 
 
@@ -606,9 +596,9 @@ $ npm run test:e2e
 
 
 # 개발자 소개
-데이터를 활용한 마케팅 솔루션 기업에서 1년간 재직한 주니어 개발자입니다. 주로  이미 서비스를 이용하고 있는 다양한 기업의 고도화 프로젝트에 투입되어 개발을 했으며 자바 REST API 서버를 개발한 경험이 있습니다.
+자바와 스프링 프레임워크 기반의 마케팅 솔루션 기업에서 1년간 재직한 경험이 있는 주니어 개발자입니다.
 
-저는 호기심 많고 꼼꼼하며 긍정적인 사람입니다. 또 항상 새로운 것을 배우고 지식을 공유하는 것에 적극적입니다. 열린자세로 의견을 공유하고 피드백을 받는것은 서로를 발전시키는 좋은 기회라고 믿습니다.
+저는 호기심 많고 세심하며 긍정적입니다. 또 항상 새로운 것을 배우고 지식을 공유하는 것에 적극적인 자세로 임하며 열린 자세로 의견을 나누고 피드백을 받는것은 한 단계 더 발전할 수 있는 좋은 기회라고 믿으며 협업합니다.
 
 
 

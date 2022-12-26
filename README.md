@@ -29,9 +29,6 @@
     - [`PATCH` /events/:id](#patch-eventsid)
     - [`DELETE` /events/:id](#delete-eventsid)
   - [Reservations](#reservations)
-    - [**Reservation status workflow**](#reservation-status-workflow)
-    - [- manual reservation ](#--manual-reservation-)
-    - [- automatic reservation](#--automatic-reservation)
     - [`Schema`](#schema-2)
     - [`POST` /events/:eventId/reservation](#post-eventseventidreservation)
     - [`GET` /events/:eventId/reservation/:id](#get-eventseventidreservationid)
@@ -361,16 +358,16 @@ $ npm run test:e2e
 
 ## Reservations
 
-### **Reservation status workflow**
+**Reservation status workflow**
 
-  ### - manual reservation </br>
+  - manual reservation </br>
 
   default  : requested </br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | -> accepted </br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | -> refused </br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  | -> canceled </br>
 
-  ### - automatic reservation</br>
+ - automatic reservation</br>
   default : accepted
 
 
