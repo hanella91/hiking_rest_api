@@ -76,11 +76,10 @@ describe('Reservation module', () => {
               id: expect.toSatisfy(uuid.validate),
               createdAt: expect.any(String),
               status: expect.any(String)
-            })
-          })
-
-      })
-  })
+            });
+          });
+      });
+  });
 
 
 
