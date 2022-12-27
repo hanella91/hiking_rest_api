@@ -61,7 +61,6 @@ export class UsersController {
  * ERROR : If someone not own the user account try to update, 403Error
  */
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(@Param('id') id: string, @Request() req: any, @Body() updateUserDto: UpdateUserDto): Promise<UserInfoWithoutPassword | undefined> {
     return await this.userService.update(req.user.userId, id, updateUserDto);

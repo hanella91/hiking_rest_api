@@ -8,7 +8,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User } from './entity/users.entity';
 import { UsersModule } from './users.module';
 import * as uuid from 'uuid';
-import { JwtAuthGuardMock, JOHN_USER_UUID } from '../test/utils/JwtAuthGuardMock';
+import { JwtAuthGuardMock, JOHN_USER_UUID, DEFAULT_USER_UUID } from '../test/utils/JwtAuthGuardMock';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
@@ -112,12 +112,12 @@ describe('User module', () => {
         .send(newUser)
         .expect(201)
         .expect(({ body }) => {
+          const { password, ...expectedUser } = body
           expect(body).toEqual({
-            ...newUser,
+            ...expectedUser,
             id: expect.toSatisfy(uuid.validate),
             avatarUrl: null,
-            createdAt: expect.any(String),
-            password: expect.any(String)
+            createdAt: expect.any(String)
           })
           expect(new Date(body.createdAt)).toBeValidDate()
         })
@@ -171,10 +171,9 @@ describe('User module', () => {
         .send(updateUser)
         .expect(200)
         .expect(({ body }) => {
+          const { password, ...expectedUser } = body
           expect(body).toEqual({
-            ...user,
-            ...updateUser,
-            password: expect.any(String),
+            ...expectedUser,
             createdAt: user.createdAt.toISOString(),
           });
           expect(new Date(body.createdAt)).toBeValidDate()

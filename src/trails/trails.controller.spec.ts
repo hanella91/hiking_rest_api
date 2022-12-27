@@ -76,69 +76,89 @@ describe('Trails module', () => {
     it(`should return bad request status code when creating new trail`, async () => {
       const testData = [
         {
-          trailName: "테스트",
+          mountainName: "Hallasan Mountain",
+          trailName: "테스트1",
+          distance: 18,
           duration: 60,
           difficulty: "easiest",
-          startPoint: "금정산입구",
+          startPoint: "성판악",
+          endPoint: "정상",
         },
         {
-          trailName: "테스트",
-          duration: 60,
-          difficulty: "easiest",
-          endPoint: "금정산입구"
-        },
-        {
-          trailName: "테스트",
-          duration: 60,
-          startPoint: "금정산입구",
-          endPoint: "금정산입구"
-        },
-        {
-          trailName: "테스트",
-          duration: 60,
-          difficulty: "gfgfgdfg",
-          startPoint: "금정산입구",
-          endPoint: "금정산입구"
-        },
-        {
-          trailName: "테스트",
-          difficulty: "easiest",
-          startPoint: "금정산입구",
-          endPoint: "금정산입구"
-        },
-        {
-          trailName: "테스트",
+          mountainName: "Hallasan Mountain",
+          trailName: "테스트1",
+          distance: 18,
           duration: '60',
-          difficulty: "easiest",
-          startPoint: "금정산입구",
-          endPoint: "금정산입구"
+          difficulty: "easy",
+          startPoint: "성판악",
+          endPoint: "정상",
         },
         {
-          duration: 60,
-          difficulty: "easiest",
-          startPoint: "금정산입구",
-          endPoint: "금정산입구"
+          mountainName: "Hallasan Mountain",
+          trailName: "테스트1",
+          distance: 18,
+          difficulty: "easy",
+          startPoint: "성판악",
+          endPoint: "정상",
         },
         {
-          trailName: 50,
+          mountainName: "Hallasan Mountain",
+          trailName: "테스트1",
           duration: 60,
-          difficulty: "easiest",
-          startPoint: "금정산입구",
-          endPoint: "금정산입구"
+          difficulty: "easy",
+          startPoint: "성판악",
+          endPoint: "정상",
         },
         {
-          trailName: "테스트",
+          trailName: "테스트1",
+          distance: 18,
           duration: 60,
-          difficulty: "easiest",
-          startPoint: 50,
-          endPoint: "금정산입구"
+          difficulty: "easy",
+          startPoint: "성판악",
+          endPoint: "정상",
         },
         {
-          trailName: "테스트",
+          mountainName: "Hallasan Mountain",
+          distance: 18,
+          duration: '60',
+          difficulty: "easy",
+          startPoint: "성판악",
+          endPoint: "정상",
+        },
+        {
+          mountainName: "Hallasan Mountain",
+          trailName: "테스트1",
+          distance: 18,
           duration: 60,
-          difficulty: "easiest",
-          startPoint: "금정산입구",
-          endPoint: 50
+          difficulty: "easy",
+          endPoint: "정상",
+        },
+        {
+          mountainName: "Hallasan Mountain",
+          trailName: 4,
+          distance: '18',
+          duration: 60,
+          difficulty: "easy",
+          startPoint: "성판악",
+          endPoint: "정상",
+        },
+        {
+          mountainName: "Hallasan Mountain",
+          trailName: "테스트1",
+          distance: 18,
+          duration: 60,
+          difficulty: "easy",
+          startPoint: 12,
+          endPoint: "정상",
+        },
+        {
+          mountainName: "Hallasan Mountain",
+          trailName: "테스트1",
+          distance: 18,
+          duration: 60,
+          difficulty: "easy",
+          startPoint: "성판악",
+          endPoint: 22,
         }
       ]
 
@@ -172,11 +192,13 @@ describe('Trails module', () => {
 
         expectedTrails.push(await trailRepository.save({
           userId: uuid.v4(),
+          mountainName: "Hallasan Mountain2",
           trailName: "테스트2",
-          duration: 100,
+          distance: 18,
+          duration: 60,
           difficulty: "moderate",
-          startPoint: "금련산역",
-          endPoint: "금련산정상",
+          startPoint: "성판악2",
+          endPoint: "정상2",
         }));
 
         // sort ASC by id
@@ -238,11 +260,13 @@ describe('Trails module', () => {
       const trail: Trail = await trailRepository.save({
         userId: DEFAULT_USER_UUID,
         id: trailIdforUpdate,
+        mountainName: "Hallasan Mountain",
         trailName: "테스트1",
+        distance: 18,
         duration: 60,
-        difficulty: DifficultyTypeEnum.easy,
-        startPoint: "금정산입구",
-        endPoint: "금정산입구",
+        difficulty: "easy",
+        startPoint: "성판악",
+        endPoint: "정상",
       });
       const updateTrail: UpdateTrailDto = {
         trailName: "트레일 수정 테스트",
@@ -270,11 +294,13 @@ describe('Trails module', () => {
       const trail: Trail = await trailRepository.save({
         userId: DEFAULT_USER_UUID,
         id: trailIdforUpdate,
+        mountainName: "Hallasan Mountain",
         trailName: "테스트1",
+        distance: 18,
         duration: 60,
-        difficulty: DifficultyTypeEnum.easy,
-        startPoint: "금정산입구",
-        endPoint: "금정산입구",
+        difficulty: "easy",
+        startPoint: "성판악",
+        endPoint: "정상",
       });
       const updateTrail: UpdateTrailDto = {
         trailName: "트레일 수정 테스트",
@@ -292,11 +318,13 @@ describe('Trails module', () => {
     it(`should return forbidden status code if not myself`, async () => {
       const trail: Trail = await trailRepository.save({
         userId: uuid.v4(),
+        mountainName: "Hallasan Mountain",
         trailName: "테스트1",
+        distance: 18,
         duration: 60,
-        difficulty: DifficultyTypeEnum.easy,
-        startPoint: "금정산입구",
-        endPoint: "금정산입구",
+        difficulty: "easy",
+        startPoint: "성판악",
+        endPoint: "정상",
       });
       await request(app.getHttpServer())
         .patch(`/trails/${trail.id}`)
@@ -310,19 +338,18 @@ describe('Trails module', () => {
       const trail: Trail = await trailRepository.save({
         userId: DEFAULT_USER_UUID,
         id: trailIdforDelete,
-        trailName: "테스트",
+        mountainName: "Hallasan Mountain",
+        trailName: "테스트1",
+        distance: 18,
         duration: 60,
-        difficulty: DifficultyTypeEnum.easy,
-        startPoint: "금정산입구",
-        endPoint: "금정산입구",
+        difficulty: "easy",
+        startPoint: "성판악",
+        endPoint: "정상",
       });
 
       await request(app.getHttpServer())
         .delete(`/trails/${trail.id}`)
-        .expect(200)
-        .expect(({ body }) => {
-          expect(body.affected).toEqual(1)
-        })
+        .expect(204)
     });
 
     it(`should return forbidden status if myself created the trail`, async () => {
@@ -330,11 +357,13 @@ describe('Trails module', () => {
       const trail: Trail = await trailRepository.save({
         userId: uuid.v4(),
         id: trailIdforDelete,
-        trailName: "테스트",
+        mountainName: "Hallasan Mountain",
+        trailName: "테스트1",
+        distance: 18,
         duration: 60,
-        difficulty: DifficultyTypeEnum.easy,
-        startPoint: "금정산입구",
-        endPoint: "금정산입구",
+        difficulty: "easy",
+        startPoint: "성판악",
+        endPoint: "정상",
       });
 
       await request(app.getHttpServer())
@@ -347,11 +376,13 @@ describe('Trails module', () => {
       await trailRepository.save({
         userId: uuid.v4(),
         id: trailIdforDelete,
-        trailName: "테스트",
+        mountainName: "Hallasan Mountain",
+        trailName: "테스트1",
+        distance: 18,
         duration: 60,
-        difficulty: DifficultyTypeEnum.easy,
-        startPoint: "금정산입구",
-        endPoint: "금정산입구",
+        difficulty: "easy",
+        startPoint: "성판악",
+        endPoint: "정상",
       });
 
       await request(app.getHttpServer())

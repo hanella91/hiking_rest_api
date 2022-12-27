@@ -11,22 +11,25 @@ import * as uuid from 'uuid';
 import request from 'supertest';
 import { Event } from './entity/event.entity';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { ReservationsModule } from '../reservations/reservations.module';
+import { Reservation } from '../reservations/entity/reservation.entity';
 
 
 describe('Events module', () => {
   let app: INestApplication;
   let eventRepository: Repository<Event>;
+  let reservationRepository: Repository<Reservation>;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AuthModule, EventsModule, TypeOrmModule.forRoot({
+      imports: [AuthModule, EventsModule, ReservationsModule, TypeOrmModule.forRoot({
         type: 'mysql',
         host: 'localhost',
         port: 3306,
         username: 'root',
         password: '1234',
         database: 'test',
-        entities: [Event],
+        entities: [Event, Reservation],
         synchronize: true,
       }),]
     }).overrideProvider(JwtAuthGuard)
@@ -37,6 +40,7 @@ describe('Events module', () => {
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
     eventRepository = app.get<Repository<Event>>(getRepositoryToken(Event));
+    reservationRepository = app.get<Repository<Reservation>>(getRepositoryToken(Reservation))
   });
 
 
@@ -52,7 +56,7 @@ describe('Events module', () => {
           trailId: uuid.v4(),
           description: 'test test',
           date: new Date('2023-01-01'),
-          maxReservation: 10,
+          maxReservations: 10,
           reservationType: 'automatic',
           reservationUntill: new Date('2022-12-30'),
         }
@@ -171,7 +175,7 @@ describe('Events module', () => {
           trailId: uuid.v4(),
           description: 'test test',
           date: new Date('2023-01-01'),
-          maxReservation: 10,
+          maxReservations: 10,
           reservationType: 'automatic',
           reservationUntill: new Date('2023-01-01'),
         }));
@@ -181,7 +185,7 @@ describe('Events module', () => {
           trailId: uuid.v4(),
           description: 'test2222',
           date: new Date('2023-01-01'),
-          maxReservation: 5,
+          maxReservations: 5,
           reservationType: 'automatic',
           reservationUntill: new Date('2023-01-01'),
         }));
@@ -214,7 +218,7 @@ describe('Events module', () => {
           trailId: uuid.v4(),
           description: 'test test',
           date: new Date('2023-01-01'),
-          maxPersons: 10,
+          maxReservations: 10,
           reservationType: 'automatic',
           reservationUntill: new Date('2023-01-01'),
         });
@@ -249,14 +253,14 @@ describe('Events module', () => {
           trailId: uuid.v4(),
           description: 'test test',
           date: new Date('2023-01-01'),
-          maxPersons: 10,
+          maxReservations: 10,
           reservationType: 'automatic',
           reservationUntill: new Date('2023-01-01'),
         });
         const updateEvent: UpdateEventDto = {
           trailId: uuid.v4(),
           description: 'test test',
-          maxReservation: 3,
+          maxReservations: 3,
           reservationType: 'manual',
           reservationUntill: new Date('2022-12-25')
         };
@@ -285,7 +289,7 @@ describe('Events module', () => {
           trailId: uuid.v4(),
           description: 'test test',
           date: new Date('2023-01-01'),
-          maxReservation: 10,
+          maxReservations: 10,
           reservationType: 'automatic',
           reservationUntill: new Date('2023-01-01')
         })
@@ -306,26 +310,23 @@ describe('Events module', () => {
         trailId: uuid.v4(),
         description: 'test test',
         date: new Date('2023-01-01'),
-        maxReservation: 10,
+        maxReservations: 10,
         reservationType: 'automatic',
         reservationUntill: new Date('2023-01-01')
       });
 
       await request(app.getHttpServer())
         .delete(`/events/${event.id}`)
-        .expect(200)
-        .expect(({ body }) => {
-          expect(body.affected).toEqual(1)
-        })
+        .expect(204)
     });
 
-    it(`should return forbidden status if myself created the event`, async () => {
+    it(`should return forbidden status if not myself created the event`, async () => {
       const event: Event = await eventRepository.save({
         userId: uuid.v4(),
         trailId: uuid.v4(),
         description: 'test test',
-        date: new Date('2023-01-01'),
-        maxReservation: 10,
+        date: "2023-01-01T06:00:00.000Z",
+        maxReservations: 10,
         reservationType: 'automatic',
         reservationUntill: new Date('2023-01-01')
       });
@@ -341,7 +342,7 @@ describe('Events module', () => {
         trailId: uuid.v4(),
         description: 'test test',
         date: new Date('2023-01-01'),
-        maxReservation: 10,
+        maxReservations: 10,
         reservationType: 'automatic',
         reservationUntill: new Date('2023-01-01')
       });
