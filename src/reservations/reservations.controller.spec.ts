@@ -11,6 +11,7 @@ import { ReservationsModule } from './reservations.module';
 import { Event } from '../events/entity/event.entity';
 import * as uuid from 'uuid';
 import request from 'supertest';
+import { UpdateReservationDto } from './dto/update-reservation.dto';
 
 describe('Reservation module', () => {
   let app: INestApplication;
@@ -63,7 +64,7 @@ describe('Reservation module', () => {
         };
 
         const createdEvent: Event = await eventRepository.save(newEvent);
-        console.log(`${createdEvent.id}`);
+
         await request(app.getHttpServer())
           .post(`/events/${createdEvent.id}/reservations`)
           .expect(201)
@@ -81,6 +82,52 @@ describe('Reservation module', () => {
       });
   });
 
+  describe('PATCH /events/:eventId/reservations/:reservationId', () => {
+    it('should change status of resrvation and return 200 status code when user is the creator of Event.',
+      async () => {
+        const newEvent: Event = {
+          id: uuid.v4(),
+          trailId: uuid.v4(),
+          userId: DEFAULT_USER_UUID,
+          description: 'test test',
+          date: new Date('2023-01-01'),
+          maxReservations: 10,
+          reservationType: 'automatic',
+          reservationUntill: new Date('2022-12-30'),
+          createdAt: new Date('2022-12-26'),
+          updatedAt: new Date('2022-12-26')
+        };
+
+        const createdEvent: Event = await eventRepository.save(newEvent);
+        const newReservation: Reservation = {
+          id: uuid.v4(),
+          eventId: createdEvent.id,
+          userId: DEFAULT_USER_UUID,
+          createdAt: new Date('2022-12-27'),
+          updatedAt: new Date('2022-12-27'),
+          status: 'requested',
+          queue: null
+        }
+
+        const createdReservation = await reservationRepository.save(newReservation)
+
+        const updatedReservation: UpdateReservationDto = {
+          status: 'accepted'
+        };
+
+        await request(app.getHttpServer())
+          .patch(`/events/${createdEvent.id}/reservations/${createdReservation.id}`)
+          .send(updatedReservation)
+          .expect(200)
+      });
+
+      //should write test about bad reqeust / forbidden error response status.
+
+
+
+
+
+  });
 
 
 
