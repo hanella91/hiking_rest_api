@@ -12,7 +12,7 @@
   - [로컬 서버 실행](#로컬-서버-실행)
   - [E2E 테스트 실행](#e2e-테스트-실행)
 - [REST API 문서](#rest-api-문서)
-  - [Auth(인증)](#auth인증)
+  - [Authentication(인증)](#authentication인증)
     - [`POST` /auth/login](#post-authlogin)
   - [Users(사용자)](#users사용자)
     - [`Schema`](#schema)
@@ -123,7 +123,7 @@ $ npm run test:e2e
 </br>
 
 # REST API 문서
-## Auth(인증)
+## Authentication(인증)
 ### `POST` /auth/login
 
 *ID와 PW가 일치한 유저에 한해 토큰을 반환합니다.*
@@ -209,8 +209,9 @@ $ npm run test:e2e
 
 
 ###  `PATCH` /users/:id
-`Request`
 *입력된 id에 해당하는 회원의 정보를 수정합니다.*
+
+`Request`
 ```
 {
   "name" : "New Name",
@@ -283,7 +284,7 @@ $ npm run test:e2e
 ### `GET` /events
 *등록된 모든 이벤트 목록을 반환합니다.*
 
-`Response 200(OK)`
+`Response 200 OK`
 
 ```
 [
@@ -345,7 +346,7 @@ $ npm run test:e2e
   "id": "320340a9-f7f4-446f-965a-2fab9a2c4adc",
   "trailId": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
   "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
-  "maxReservations": 10,
+  "maxReservations": 12,
   "date": "2022-12-31T06:00:00.000Z",
   "description": "Hiking Event description updated!",
   "createdAt": "2022-12-25T16:00:19.381Z",
@@ -397,7 +398,7 @@ $ npm run test:e2e
 
 *입력된 eventId에 해당하는 예약을 등록합니다.*
 
-`Reqest`
+`Request`
 
 *- 해당 요청은 Request body를 필요로하지 않습니다.*
 
@@ -439,7 +440,7 @@ $ npm run test:e2e
 
 *입력된 eventId에 해당하는 예약정보를 수정합니다.*
 
-`Reqeust`
+`Request`
 ```
 {
   "status" : "accepted"
@@ -480,7 +481,7 @@ $ npm run test:e2e
 
 *등산로 정보를 등록합니다.*
 
-`Reqeust`
+`Request`
 ```
 {
   "mountainName": "Hallasan Mountain",
@@ -489,7 +490,7 @@ $ npm run test:e2e
   "duration":  435,
   "difficulty": "hard",
   "startPoint": "Seongpanak",
-  "endPoint": "Summit"
+  "endPoint": "Hallasan Summit"
 }
 ```
 
@@ -503,7 +504,7 @@ $ npm run test:e2e
   "duration": 435,
   "difficulty": "hard",
   "startPoint": "Seongpanak",
-  "endPoint": "Summit",
+  "endPoint": "Hallasan Summit",
   "userId": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5",
   "createdAt": "2022-12-24T09:12:27.957Z"
   "updatedAt": "2022-12-24T09:12:27.957Z",
@@ -525,7 +526,7 @@ $ npm run test:e2e
     "duration": 435,
     "difficulty": "hard",
     "startPoint": "Seongpanak",
-    "endPoint": "Summit",
+    "endPoint": "Hallasan Summit",
     "createdAt": "2022-12-24T10:01:23.392Z",
     "updatedAt": "2022-12-24T10:01:23.392Z"
   },
@@ -547,7 +548,7 @@ $ npm run test:e2e
   "duration": 435,
   "difficulty": "hard",
   "startPoint": "Seongpanak",
-  "endPoint": "Summit",
+  "endPoint": "Hallasan Summit",
   "createdAt": "2022-12-24T09:12:27.957Z",
   "updatedAt": "2022-12-24T09:12:27.957Z"
 }
@@ -577,7 +578,7 @@ $ npm run test:e2e
   "duration": 435,
   "difficulty": "hard",
   "startPoint": "Updated Seongpanak",
-  "endPoint": "Summit",
+  "endPoint": "Hallasan Summit",
   "createdAt": "2022-12-24T09:12:27.957Z",
   "updatedAt": "2022-12-24T09:44:37.000Z"
 }

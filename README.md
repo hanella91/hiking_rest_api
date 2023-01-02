@@ -14,7 +14,7 @@
   - [Start local server](#start-local-server)
   - [Run functional Tests.](#run-functional-tests)
 - [REST API Documentation](#rest-api-documentation)
-  - [Auth](#auth)
+  - [Authentication](#authentication)
     - [`POST` /auth/login](#post-authlogin)
   - [Users](#users)
     - [`Schema`](#schema)
@@ -106,7 +106,7 @@ $ npm run test:e2e
 ```
 
 # REST API Documentation
-## Auth
+## Authentication
 ### `POST` /auth/login
 
 *Return access token for a logged-in user.*
@@ -337,7 +337,7 @@ $ npm run test:e2e
   "id": "320340a9-f7f4-446f-965a-2fab9a2c4adc",
   "trailId": "ac9bbac3-ba4a-4ca0-859b-d300ecd7d8d5",
   "userId": "ae314e83-aa93-4022-8b19-936c920d5442",
-  "maxReservations": 10,
+  "maxReservations": 12,
   "date": "2022-12-31T06:00:00.000Z",
   "description": "Hiking Event description updated!",
   "createdAt": "2022-12-25T16:00:19.381Z",
@@ -484,7 +484,7 @@ $ npm run test:e2e
   "duration":  435,
   "difficulty": "hard",
   "startPoint": "Seongpanak",
-  "endPoint": "Summit"
+  "endPoint": "Hallasan Summit"
 }
 ```
 
@@ -498,7 +498,7 @@ $ npm run test:e2e
   "duration": 435,
   "difficulty": "hard",
   "startPoint": "Seongpanak",
-  "endPoint": "Summit",
+  "endPoint": "Hallasan Summit",
   "userId": "72f25fef-6097-4c25-b5b6-aa23f36a7bc5",
   "updatedAt": "2022-12-24T09:12:27.957Z",
   "id": "aa86f939-e82b-4dd3-9d84-ae7bf79aebbe",
@@ -522,7 +522,7 @@ $ npm run test:e2e
     "duration": 435,
     "difficulty": "hard",
     "startPoint": "Seongpanak",
-    "endPoint": "Summit",
+    "endPoint": "Hallasan Summit",
     "createdAt": "2022-12-24T10:01:23.392Z",
     "updatedAt": "2022-12-24T10:01:23.392Z"
   },
@@ -545,7 +545,7 @@ $ npm run test:e2e
   "duration": 435,
   "difficulty": "hard",
   "startPoint": "Seongpanak",
-  "endPoint": "Summit",
+  "endPoint": "Hallasan Summit",
   "createdAt": "2022-12-24T09:12:27.957Z",
   "updatedAt": "2022-12-24T09:12:27.957Z"
 }
@@ -575,7 +575,7 @@ $ npm run test:e2e
   "duration": 435,
   "difficulty": "hard",
   "startPoint": "Updated Seongpanak",
-  "endPoint": "Summit",
+  "endPoint": "Hallasan Summit",
   "createdAt": "2022-12-24T09:12:27.957Z",
   "updatedAt": "2022-12-24T09:44:37.000Z"
 }
